@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.1
+Name=Aura
+GenericName=Aura
+Comment=Aura
+Exec=/usr/bin/single-instance /usr/bin/aura
+Terminal=false
+Type=Application
+#Icon=aura
