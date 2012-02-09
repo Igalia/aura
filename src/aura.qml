@@ -17,15 +17,30 @@ PageStackWindow {
         id: mainPage
         orientationLock: PageOrientation.LockLandscape
 
-        Text {
-            id: hello
-            anchors { horizontalCenter: parent.horizontalCenter; verticalCenter: parent.verticalCenter }
-            width: paintedWidth
-            height: paintedHeight
-            font.pixelSize: UIConstants.FONT_XLARGE
-            font.family: UIConstants.FONT_FAMILY
-            text: "Hello world"
-            clip: true
+        Rectangle {
+            id: rectangle
+            anchors.fill: parent
+            color: "red"
+        }
+
+        ToolIcon {
+            id: shutter
+            anchors {
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+            iconId: "camera-shutter"
+            onClicked: console.debug("shutter pressed")
+        }
+
+        ToolIcon {
+            id: conf
+            anchors {
+                right: parent.right
+                bottom: parent.bottom
+            }
+            iconId: "toolbar-view-menu"
+            onClicked: console.debug("conf pressed")
         }
     }
 }
