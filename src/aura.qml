@@ -15,6 +15,7 @@ PageStackWindow {
 
     Page {
         id: mainPage
+        orientationLock: PageOrientation.LockLandscape
 
         Text {
             id: hello
