@@ -1,13 +1,20 @@
 TEMPLATE = app
-QT += declarative
-CONFIG += meegotouch
 TARGET = "aura"
-DEPENDPATH += .
-INCLUDEPATH += .
+
+QT += declarative
+CONFIG += meegotouch link_pkgconfig
+PKGCONFIG += gstreamer-video-0.10
+LIBS += -lqcamera
+DEPENDPATH += . /usr/include/qcamera
+INCLUDEPATH += . /usr/include/qcamera
 
 # Input
-HEADERS +=
-SOURCES += main.cpp
+HEADERS += controller.h     \
+           xvviewfinder.h   \
+
+SOURCES += main.cpp         \
+           controller.cpp   \
+           xvviewfinder.cpp \
 #FORMS#
 
   unix {
