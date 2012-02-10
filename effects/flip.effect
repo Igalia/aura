@@ -1,0 +1,16 @@
+[Effect]
+Encoding=UTF-8
+Name=Flip
+Name[es]=Voltear
+Name[gl]=Voltear
+Name[nb]=Vend
+Name[sl]=Zrcaljenje
+Name[te]=తిప్పు
+Comment=Flip the image, as if looking at a mirror
+Comment[es]=Voltear la imagen, como si se reflejase en un espejo
+Comment[gl]=Voltear a imaxe, como se se reflexase nun espello
+Comment[nb]=Vend bildet. Som å se i et speil
+Comment[sl]=Zrcaljenje slike preko navidezne osi na stranicah
+Comment[te]=ఒక అద్దంలా కనిపిస్తున్నట్లయితే, చిత్రమును తిప్పుము
+Category=Geometry;
+PipelineDescription=videoflip method=horizontal-flip
