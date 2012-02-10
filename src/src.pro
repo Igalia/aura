@@ -3,7 +3,7 @@ TARGET = "aura"
 
 QT += declarative
 CONFIG += meegotouch link_pkgconfig
-PKGCONFIG += gstreamer-video-0.10
+PKGCONFIG += gstreamer-video-0.10 glib-2.0
 LIBS += -lqcamera
 DEPENDPATH += . /usr/include/qcamera
 INCLUDEPATH += . /usr/include/qcamera
@@ -12,11 +12,13 @@ INCLUDEPATH += . /usr/include/qcamera
 HEADERS += controller.h     \
            xvviewfinder.h   \
            effect.h         \
+           effectmanager.h  \
 
 SOURCES += main.cpp         \
            controller.cpp   \
            xvviewfinder.cpp \
            effect.cpp       \
+           effectmanager.cpp \
 #FORMS#
 
   unix {
