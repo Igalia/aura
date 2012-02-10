@@ -13,6 +13,7 @@ class Controller : public QObject
     Controller(QObject *parent = 0);
     void setupCamDevice();
     void setupViewfinder();
+    void setupEffects();
 
  private slots:
     void startPipeline();

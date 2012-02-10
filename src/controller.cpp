@@ -4,12 +4,15 @@
 
 #include <MScene>
 
+#include <QDebug>
+
 #include <QCamResolutionValue>
 #include <QCamStillResolution>
 #include <QCamVideoResolution>
 
 #include "controller.h"
 #include "xvviewfinder.h"
+#include "effectmanager.h"
 
 #define STILL_WIDTH 640
 #define STILL_HEIGHT 480
@@ -28,6 +31,7 @@ Controller::Controller(QObject *parent)
     mainWindow.setOrientationAngleLocked(true);
     mainWindow.showFullScreen();
 
+    setupEffects();
     setupCamDevice();
 
     connect(&mainWindow, SIGNAL(displayEntered()), this, SLOT(startPipeline()));
@@ -68,4 +72,9 @@ void Controller::startPipeline()
 void Controller::stopPipeline()
 {
     device.stop();
+}
+
+void Controller::setupEffects()
+{
+    EffectManager::setup(this);
 }
