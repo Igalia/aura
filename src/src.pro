@@ -11,10 +11,12 @@ INCLUDEPATH += . /usr/include/qcamera
 # Input
 HEADERS += controller.h     \
            xvviewfinder.h   \
+           effect.h         \
 
 SOURCES += main.cpp         \
            controller.cpp   \
            xvviewfinder.cpp \
+           effect.cpp       \
 #FORMS#
 
   unix {
