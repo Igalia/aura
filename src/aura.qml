@@ -23,6 +23,10 @@ Item {
             color: "red"
         }
 
+        Effects {
+            id: effects
+        }
+
         ToolIcon {
             id: shutter
             anchors {
@@ -30,6 +34,7 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
             iconId: "camera-shutter"
+            enabled: !effects.visible
             onClicked: console.debug("shutter pressed")
         }
 
@@ -40,7 +45,8 @@ Item {
                 bottom: parent.bottom
             }
             iconId: "toolbar-view-menu"
-            onClicked: console.debug("conf pressed")
+            enabled: !effects.visible
+            onClicked: effects.show()
         }
     }
 }
