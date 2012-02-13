@@ -4,7 +4,8 @@
 #include <gst/interfaces/xoverlay.h>
 #include "xvviewfinder.h"
 
-XvViewFinder::XvViewFinder(QCamDevice *device) :
+XvViewFinder::XvViewFinder(QCamDevice *device, QGraphicsItem *parent) :
+    MWidget(parent),
     m_sink(0),
     m_device(device),
     m_aw(0)
@@ -57,4 +58,16 @@ int XvViewFinder::getWindowId()
     // effectiveWinId() will look for a parent widget that has a native window
     // IF the viewport() is not native (Which is the case for MeeGo graphics system).
     return m_aw->viewport()->effectiveWinId();
+}
+
+void XvViewFinder::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+    event->accept();
+    emit mousePressed();
+}
+
+void XvViewFinder::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+{
+    event->accept();
+    emit mouseReleased();
 }

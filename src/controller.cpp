@@ -16,15 +16,11 @@
 #include <QCamWhiteBalance>
 #include <QCamColourTone>
 #include <QCamEvComp>
+#include <QCamSimpleFileNaming>
 
 #include "controller.h"
 #include "xvviewfinder.h"
 #include "effectmanager.h"
-
-#define STILL_WIDTH 640
-#define STILL_HEIGHT 480
-#define STILL_FRN 30
-#define STILL_FRD 1
 
 #define VIDEO_WIDTH 848
 #define VIDEO_HEIGHT 480
@@ -47,8 +43,17 @@ Controller::Controller(QObject *parent)
 
 void Controller::setupCamDevice()
 {
+    // set the pipeline to video mode
     setVideoMode();
+
+    // setup the viewfinder to the pipeline
     setupViewfinder();
+
+    // set the file naming pattern
+    QCamSimpleFileNaming *fileNaming = new QCamSimpleFileNaming("/home/user/MyDocs/aura",
+                                                                "/home/user/.qcamera",
+                                                                &device);
+    device.setFileNaming(fileNaming);
 }
 
 void Controller::setVideoMode()
@@ -85,6 +90,8 @@ void Controller::setupViewfinder()
     viewfinder->setPos(0, 0);
 
     device.setViewfinder(viewfinder);
+
+    connect(viewfinder, SIGNAL(mouseReleased()), this, SLOT(displayClicked()));
 }
 
 void Controller::startPipeline()
@@ -100,4 +107,25 @@ void Controller::stopPipeline()
 void Controller::setupEffects()
 {
     EffectManager::setup(this);
+}
+
+void Controller::startRecording()
+{
+    device.videoMode()->startVideoCapture();
+}
+
+void Controller::stopRecording()
+{
+    device.videoMode()->stopVideoCapture();
+}
+
+void Controller::displayClicked()
+{
+    if (device.videoMode()->captureState() == QCamVideo::CaptureStopped) {
+        startRecording();
+        qCritical() << "Controller: recording started";
+    } else {
+        stopRecording();
+        qCritical() << "Controller: recording stopped";
+    }
 }

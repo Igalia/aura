@@ -19,6 +19,9 @@ class Controller : public QObject
  private slots:
     void startPipeline();
     void stopPipeline();
+    void startRecording();
+    void stopRecording();
+    void displayClicked();
 
  private:
     MApplicationWindow mainWindow;
