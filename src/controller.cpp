@@ -9,6 +9,13 @@
 #include <QCamResolutionValue>
 #include <QCamStillResolution>
 #include <QCamVideoResolution>
+#include <QCamVideo>
+#include <QCamSceneMode>
+#include <QCamZoom>
+#include <QCamVideoResolution>
+#include <QCamWhiteBalance>
+#include <QCamColourTone>
+#include <QCamEvComp>
 
 #include "controller.h"
 #include "xvviewfinder.h"
@@ -40,14 +47,30 @@ Controller::Controller(QObject *parent)
 
 void Controller::setupCamDevice()
 {
-    QCamStillResolution *stillReso = new QCamStillResolution(&device);
-    stillReso->setValue(new QCamResolutionValue(STILL_WIDTH, STILL_HEIGHT,
-                                                STILL_FRN, STILL_FRD));
-    QCamVideoResolution *videoReso = new QCamVideoResolution(&device);
-    videoReso->setValue(new QCamResolutionValue(VIDEO_WIDTH, VIDEO_HEIGHT,
-                                               VIDEO_FRN, VIDEO_FRD));
-
+    setVideoMode();
     setupViewfinder();
+}
+
+void Controller::setVideoMode()
+{
+    device.videoMode()->activate();
+
+    // we need to set here the values for the mode:
+    // VideoSceneMode
+    QCamSceneMode(&device).set(QCamSceneMode::Auto);
+    // zoom
+    QCamZoom(&device).setValue(1.0);
+    // VideoResolution
+    QCamVideoResolution(&device).setValue(new QCamResolutionValue(VIDEO_WIDTH, VIDEO_HEIGHT,
+                                                                  VIDEO_FRN, VIDEO_FRD));
+    // VideoWBSetting
+    QCamWhiteBalance(&device).setValue(QCamWhiteBalance::Auto);
+    // VideoCFSetting
+    QCamColourTone(&device).setValue(QCamColourTone::Normal);
+    // VideoExposureSetting
+    QCamEvComp(&device).setValue(0.0);
+    // VideoTorchSetting
+    device.videoMode()->setTorch(false);
 }
 
 void Controller::setupViewfinder()

@@ -12,6 +12,7 @@ class Controller : public QObject
  public:
     Controller(QObject *parent = 0);
     void setupCamDevice();
+    void setVideoMode();
     void setupViewfinder();
     void setupEffects();
 
