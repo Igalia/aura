@@ -1,5 +1,5 @@
 #ifndef EFFECT_H
-#define EFFECT_h
+#define EFFECT_H
 
 #include <QString>
 
