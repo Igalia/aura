@@ -4,18 +4,18 @@ import com.nokia.extras 1.0
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasConstants
 
-PageStackWindow {
-    id: appWindow
-
-    initialPage: mainPage
+Item {
+    id: page
+    width: screen.displayHeight; height: screen.displayWidth
 
     Component.onCompleted: {
+        screen.allowedOrientations = Screen.Landscape
         console.debug("program loaded")
     }
 
-    Page {
+    Item {
         id: mainPage
-        orientationLock: PageOrientation.LockLandscape
+        anchors.fill: parent
 
         Rectangle {
             id: rectangle
