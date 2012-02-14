@@ -21,6 +21,7 @@
 #include "controller.h"
 #include "xvviewfinder.h"
 #include "effectmanager.h"
+#include "cameffect.h"
 
 #define VIDEO_WIDTH 848
 #define VIDEO_HEIGHT 480
@@ -107,6 +108,8 @@ void Controller::stopPipeline()
 void Controller::setupEffects()
 {
     EffectManager::setup(this);
+    CamEffect *cameff = new CamEffect(&device, this);
+    cameff->setValue(EffectManager::instance()->getEffect("Dice"));
 }
 
 void Controller::startRecording()
