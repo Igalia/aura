@@ -13,6 +13,7 @@ HEADERS += controller.h     \
            xvviewfinder.h   \
            effect.h         \
            effectmanager.h  \
+           debugutils.h     \
            cameffect.h      \
            qcamcapability_p.h \
 
@@ -21,6 +22,7 @@ SOURCES += main.cpp         \
            xvviewfinder.cpp \
            effect.cpp       \
            effectmanager.cpp \
+           debugutils.c     \
            cameffect.cpp    \
 #FORMS#
 

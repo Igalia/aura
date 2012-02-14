@@ -4,6 +4,8 @@
 
 #include <gst/gst.h>
 
+#include "debugutils.h"
+
 #include "cameffect.h"
 #include "qcamcapability_p.h"
 
@@ -80,22 +82,9 @@ CamEffect::setValue(Effect *value)
     qDebug() << "vffbin element name"
 	     << gst_element_get_name(vffbin);
 
-    GstElement *item = 0;
-    GstIterator *iter = gst_bin_iterate_elements(GST_BIN(vffbin));
-    bool done = false;
-    while (!done) {
-	    switch(gst_iterator_next(iter, (void **) &item)) {
-	    case GST_ITERATOR_OK:
-		    qDebug() << "+ element in bin name"
-			     << gst_element_get_name(item);
-		    gst_object_unref(item);
-		    break;
-	    default:
-		    done = true;
-		    break;
-	    }
-    }
-    gst_iterator_free(iter);
+    my_debug_bin_to_dot_file(GST_BIN(vffbin),
+			     GST_DEBUG_GRAPH_SHOW_ALL,
+			     "vffbin");
 
     return true;
 }
