@@ -13,6 +13,8 @@ public:
 
    virtual ~EffectManager();
 
+   Effect *getEffect(const QString &name) const;
+
 private:
    EffectManager(QObject *parent = 0);
 

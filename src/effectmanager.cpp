@@ -38,6 +38,17 @@ EffectManager::~EffectManager()
         delete m_effects.takeFirst();
 }
 
+Effect *
+EffectManager::getEffect(const QString &name) const
+{
+    for(int i = 0; i < m_effects.size(); i++) {
+        if (name == m_effects[i]->name())
+            return m_effects[i];
+    }
+
+    return 0;
+}
+
 void
 EffectManager::loadEffects()
 {
