@@ -9,7 +9,8 @@ DEPENDPATH += . /usr/include/qcamera
 INCLUDEPATH += . /usr/include/qcamera
 
 # Input
-HEADERS += controller.h     \
+HEADERS += settings.h       \
+           controller.h     \
            xvviewfinder.h   \
            effect.h         \
            effectmanager.h  \

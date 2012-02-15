@@ -15,6 +15,31 @@ class Controller : public QObject
     void setVideoMode();
     void setupViewfinder();
     void setupEffects();
+    void setupFileStorage();
+
+    // resolution values
+    typedef enum {
+        Low = 0,
+        Medium,
+        High
+    } Resolution;
+
+    // colour filter values
+    typedef enum {
+        Normal = 0,
+        Grayscale,
+        Sepia,
+        Vivid,
+        Negative,
+        Solarize
+    } ColorFilter;
+
+    // user to set user defined values
+    void setResolution(const Resolution value);
+    void setZoom(const double value);
+    void setColorFilter(const ColorFilter value);
+    void setVideoEffect(const QString &value);
+
 
  private slots:
     void startPipeline();
@@ -26,5 +51,11 @@ class Controller : public QObject
  private:
     MApplicationWindow mainWindow;
     QCamDevice device;
+
+    // current config
+    double currentZoom;
+    Resolution currentResolution;
+    ColorFilter currentColorFilter;
+    QString currentVideoEffect;
 };
 #endif
