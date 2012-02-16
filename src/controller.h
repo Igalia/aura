@@ -47,6 +47,7 @@ class Controller : public QObject
     void startRecording();
     void stopRecording();
     void displayClicked();
+    void resourcesLost();
 
  private:
     MApplicationWindow mainWindow;

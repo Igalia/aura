@@ -24,6 +24,7 @@
 #include "effectmanager.h"
 #include "cameffect.h"
 #include "settings.h"
+#include "resourcemanager.h"
 
 Controller::Controller(QObject *parent)
     : QObject(parent),
@@ -46,6 +47,7 @@ Controller::Controller(QObject *parent)
 
     connect(&mainWindow, SIGNAL(displayEntered()), this, SLOT(startPipeline()));
     connect(&mainWindow, SIGNAL(displayExited()), this, SLOT(stopPipeline()));
+    connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
 }
 
 void Controller::setupCamDevice()
@@ -112,12 +114,18 @@ void Controller::setupFileStorage()
 }
 void Controller::startPipeline()
 {
-    device.start();
+    if (ResourceManager::instance()->acquirePlaybackResources()) {
+        device.start();
+    } else {
+        qCritical() << "Playback resources denied";
+        resourcesLost();
+    }
 }
 
 void Controller::stopPipeline()
 {
     device.stop();
+    ResourceManager::instance()->releaseResources();
 }
 
 void Controller::setupEffects()
@@ -127,12 +135,21 @@ void Controller::setupEffects()
 
 void Controller::startRecording()
 {
-    device.videoMode()->startVideoCapture();
+    if (ResourceManager::instance()->acquireRecordingResources()) {
+        device.videoMode()->startVideoCapture();
+    } else {
+        qCritical() << "Recording resources denied";
+        resourcesLost();
+    }
 }
 
 void Controller::stopRecording()
 {
     device.videoMode()->stopVideoCapture();
+    if (!ResourceManager::instance()->acquirePlaybackResources()) {
+        qCritical() << "Playback resources denied after recording";
+        resourcesLost();
+    }
 }
 
 void Controller::displayClicked()
@@ -227,4 +244,11 @@ void Controller::setVideoEffect(const QString &value)
     } else {
         qCritical() << "Error setting video effect " << value;
     }
+}
+
+void Controller::resourcesLost()
+{
+    qCritical() << "Some resource was lost or denied, stopping recording and pipeline";
+    stopRecording();
+    stopPipeline();
 }
