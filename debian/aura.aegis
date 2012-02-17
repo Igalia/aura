@@ -1,0 +1,17 @@
+<aegis>
+  <request>
+    <credential name="TrackerReadAccess" />
+    <credential name="TrackerWriteAccess" />
+    <credential name="tracker::tracker-miner-fs-access" />
+    <credential name="GID::metadata-users" />
+    <credential name="GRP::metadata-users" />
+    <credential name="GRP::users" />
+    <credential name="GRP::gallerycoredata-users" />
+    <credential name="GRP::video" />
+    <credential name="GRP::pulse-access" />
+    <credential name="Location" />
+    <credential name="CAP::chown" />
+    <credential name="CAP::fowner" />
+    <for path="/usr/bin/aura" />
+  </request>
+</aegis>
