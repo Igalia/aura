@@ -13,7 +13,7 @@ Rectangle {
     opacity: 0
     visible: opacity > 0
 
-    property real backgroundOpacity: 0.5
+    property real backgroundOpacity: 0
     property real objectsOpacity: 1
 
     Behavior on opacity
@@ -32,7 +32,7 @@ Rectangle {
     Rectangle {
         id: backgroundRectangle
         anchors.fill: parent
-        color: "grey"
+        color: "#080810"
         opacity: backgroundOpacity
     }
 
