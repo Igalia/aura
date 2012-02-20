@@ -46,7 +46,7 @@ INSTALLS += target qmlgui desktop service iconxpm icon26 icon48 icon64
   target.path =$$BINDIR
 
   qmlgui.path = $$DATADIR/aura
-  qmlgui.files += aura.qml
+  qmlgui.files += aura.qml Effects.qml
 
   desktop.path = $$DATADIR/applications
   desktop.files += $${TARGET}.desktop
