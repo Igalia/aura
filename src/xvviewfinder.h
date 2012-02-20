@@ -2,34 +2,26 @@
 #define XV_VIEW_FINDER_H
 
 #include <QObject>
-#include <MApplicationWindow>
 #include <gst/gst.h>
 #include <QCamAbstractViewFinder>
 #include <QCamDevice>
-#include <MWidget>
 #include <QGraphicsSceneMouseEvent>
+#include <QDeclarativeItem>
 
-class XvViewFinder : public MWidget, public QCamAbstractViewfinder {
+class XvViewFinder : public QDeclarativeItem, public QCamAbstractViewfinder {
     Q_OBJECT
+
 public:
-    XvViewFinder(QCamDevice *device, QGraphicsItem *parent = 0);
+    XvViewFinder(QDeclarativeItem *parent = 0);
     virtual ~XvViewFinder();
     GstElement *makeSinkElement();
     bool hasWindowId();
     int getWindowId();
-
-signals:
-    void mousePressed();
-    void mouseReleased();
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+    void setCamDevice(QCamDevice *device) { m_device = device; };
 
 private:
     GstElement *m_sink;
     QCamDevice *m_device;
-    MApplicationWindow *m_aw;
 };
 
 #endif /* VIEW_FINDER_H */

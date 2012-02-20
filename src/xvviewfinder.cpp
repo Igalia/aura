@@ -1,16 +1,16 @@
-#include <MApplication>
 #include <gst/base/gstbasesink.h>
 #include <gst/gstpad.h>
 #include <gst/interfaces/xoverlay.h>
+#include <QDeclarativeView>
+
 #include "xvviewfinder.h"
 
-XvViewFinder::XvViewFinder(QCamDevice *device, QGraphicsItem *parent) :
-    MWidget(parent),
+XvViewFinder::XvViewFinder(QDeclarativeItem *parent) :
+    QDeclarativeItem(parent),
     m_sink(0),
-    m_device(device),
-    m_aw(0)
+    m_device(0)
 {
-    m_aw = MApplication::activeApplicationWindow();
+    setZValue(-1.0);
 }
 
 
@@ -38,10 +38,11 @@ GstElement *XvViewFinder::makeSinkElement()
 
     gst_object_ref(m_sink);
 
-    if (true == m_aw->isOnDisplay()) {
-        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(m_sink),
-                                     getWindowId());
-    }
+    g_object_set(m_sink, "autopaint-colorkey", FALSE, NULL);
+
+    int winId = getWindowId();
+    qDebug() << "setting win id to " << winId;
+    gst_x_overlay_set_window_handle(GST_X_OVERLAY(m_sink), winId);
 
     return m_sink;
 }
@@ -53,21 +54,15 @@ bool XvViewFinder::hasWindowId()
 
 int XvViewFinder::getWindowId()
 {
-    // We need to use MApplicationWindow::viewport()->effectiveWinId() in order
-    // to work with MeeGo and non-MeeGo graphics systems.
-    // effectiveWinId() will look for a parent widget that has a native window
-    // IF the viewport() is not native (Which is the case for MeeGo graphics system).
-    return m_aw->viewport()->effectiveWinId();
-}
+    int winId = 0;
 
-void XvViewFinder::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-    event->accept();
-    emit mousePressed();
-}
+    QList<QGraphicsView*> viewsList = scene()->views();
 
-void XvViewFinder::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-    event->accept();
-    emit mouseReleased();
+    if (viewsList.size() == 1) {
+        winId = viewsList[0]->effectiveWinId();
+    } else {
+        qCritical() << "there is " << viewsList.size() << "views";
+    }
+
+    return winId;
 }

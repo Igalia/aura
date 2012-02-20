@@ -3,6 +3,7 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasConstants
+import aura.viewfinder 1.0
 
 Item {
     id: page
@@ -17,10 +18,18 @@ Item {
         id: mainPage
         anchors.fill: parent
 
-        Rectangle {
-            id: rectangle
+        ViewFinder {
+            id: viewFinder
             anchors.fill: parent
-            color: "red"
+
+            Rectangle {
+                id: viewFinderColorkeyPainter
+                anchors.fill: parent
+                color: "#080810"
+
+                Component.onCompleted: console.debug("viewfinder colorkey painted")
+            }
+        }
         }
 
         Effects {
