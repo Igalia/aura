@@ -16,6 +16,7 @@ Item {
     }
 
     property bool windowActive : platformWindow.active
+    property int animationDuration: 150
 
     Item {
         id: mainPage
@@ -54,6 +55,7 @@ Item {
 
         Effects {
             id: effects
+            animationDuration: page.animationDuration
         }
 
         ToolIcon {
@@ -63,7 +65,9 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
             iconId: "camera-shutter"
-            enabled: !effects.visible
+            opacity: effects.visible ? 0 : 1
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: {
                 console.debug("shutter clicked")
                 controller.shutterClicked()
@@ -77,7 +81,9 @@ Item {
                 bottom: parent.bottom
             }
             iconId: "toolbar-view-menu"
-            enabled: !effects.visible
+            opacity: effects.visible ? 0 : 1
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: effects.show()
         }
     }

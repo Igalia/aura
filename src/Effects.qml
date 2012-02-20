@@ -15,10 +15,11 @@ Rectangle {
 
     property real backgroundOpacity: 0
     property real objectsOpacity: 1
+    property int animationDuration: 150
 
     Behavior on opacity
     {
-        NumberAnimation { duration: 100 }
+        NumberAnimation { duration: animationDuration }
     }
 
     function show() {
