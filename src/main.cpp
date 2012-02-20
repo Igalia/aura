@@ -1,8 +1,11 @@
-#include <MApplication>
+#include <QDeclarativeView>
+#include <QApplication>
+#include <QtDeclarative>
 
 #include <gst/gst.h>
 
 #include "controller.h"
+#include "xvviewfinder.h"
 
 #ifdef __i386__
 #define QML_PATH "src/"
@@ -14,14 +17,15 @@ int main(int argc, char *argv[])
 {
     gst_init(&argc, &argv);
 
-    MApplication *app = new MApplication(argc, argv);
+    QApplication app(argc, argv);
 
-    Controller *c = new Controller();
+    QDeclarativeView view;
+    qDebug("opening qml files in %s", QML_PATH);
+    view.setSource(QUrl::fromLocalFile(QML_PATH "aura.qml"));
+    view.showFullScreen();
 
-    int ret = app->exec();
+    int ret = app.exec();
 
-    delete c;
-    delete app;
     gst_deinit();
     return ret;
 }
