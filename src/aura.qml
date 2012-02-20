@@ -3,6 +3,7 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasConstants
+import aura.controller 1.0
 import aura.viewfinder 1.0
 
 Item {
@@ -14,9 +15,23 @@ Item {
         console.debug("program loaded")
     }
 
+    property bool windowActive : platformWindow.active
+
     Item {
         id: mainPage
         anchors.fill: parent
+
+        Connections {
+            target: platformWindow
+
+            onActiveChanged: {
+                if (platformWindow.active) {
+                    controller.startPipeline()
+                } else {
+                    controller.stopPipeline()
+                }
+            }
+        }
 
         ViewFinder {
             id: viewFinder
@@ -30,6 +45,11 @@ Item {
                 Component.onCompleted: console.debug("viewfinder colorkey painted")
             }
         }
+
+        Controller {
+            id: controller
+            viewFinder: viewFinder
+            Component.onCompleted: setup()
         }
 
         Effects {
@@ -44,7 +64,10 @@ Item {
             }
             iconId: "camera-shutter"
             enabled: !effects.visible
-            onClicked: console.debug("shutter pressed")
+            onClicked: {
+                console.debug("shutter clicked")
+                controller.shutterClicked()
+            }
         }
 
         ToolIcon {

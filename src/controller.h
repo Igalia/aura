@@ -2,15 +2,20 @@
 #define CONTROLLER_H
 
 #include <QObject>
-#include <QDeclarativeView>
-#include <MApplicationWindow>
+#include <QDeclarativeItem>
 #include <QCamDevice>
 
-class Controller : public QObject
+#include "xvviewfinder.h"
+
+class Controller : public QDeclarativeItem
 {
     Q_OBJECT
+
  public:
-    Controller(QObject *parent = 0);
+    Q_PROPERTY(QObject * viewFinder
+               READ viewFinder
+               WRITE setViewFinder)
+    Controller(QDeclarativeItem *parent = 0);
     void setupCamDevice();
     void setVideoMode();
     void setupViewfinder();
@@ -41,22 +46,30 @@ class Controller : public QObject
     void setVideoEffect(const QString &value);
 
 
- private slots:
+    QObject* viewFinder() { return m_viewFinder; };
+
+ public slots:
+    void setViewFinder(QObject *viewFinder) {
+      m_viewFinder = dynamic_cast<XvViewFinder*>(viewFinder);
+    };
+
+    void setup();
     void startPipeline();
     void stopPipeline();
     void startRecording();
     void stopRecording();
-    void displayClicked();
+    void shutterClicked();
+
+ private slots:
     void resourcesLost();
 
  private:
-    MApplicationWindow mainWindow;
-    QCamDevice device;
-
+    QCamDevice m_device;
+    XvViewFinder *m_viewFinder;
     // current config
-    double currentZoom;
-    Resolution currentResolution;
-    ColorFilter currentColorFilter;
-    QString currentVideoEffect;
+    double m_currentZoom;
+    Resolution m_currentResolution;
+    ColorFilter m_currentColorFilter;
+    QString m_currentVideoEffect;
 };
 #endif

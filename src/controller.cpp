@@ -1,11 +1,5 @@
-#include <QDeclarativeContext>
-#include <QDeclarativeView>
-#include <QtDeclarative>
-#include <QDir>
-
-#include <MScene>
-
 #include <QDebug>
+#include <QDir>
 
 #include <QCamResolutionValue>
 #include <QCamStillResolution>
@@ -20,33 +14,26 @@
 #include <QCamSimpleFileNaming>
 
 #include "controller.h"
-#include "xvviewfinder.h"
 #include "effectmanager.h"
 #include "cameffect.h"
 #include "settings.h"
 #include "resourcemanager.h"
 
-Controller::Controller(QObject *parent)
-    : QObject(parent),
-      mainWindow(),
-      device(),
-      currentZoom(ZOOM_DEFAULT),
-      currentResolution(VIDEO_RESOLUTION_DEFAULT),
-      currentColorFilter(COLOR_FILTER_DEFAULT),
-      currentVideoEffect(VIDEO_EFFECT_DEFAULT)
+Controller::Controller(QDeclarativeItem *parent)
+    : QDeclarativeItem(parent),
+      m_currentZoom(ZOOM_DEFAULT),
+      m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
+      m_currentColorFilter(COLOR_FILTER_DEFAULT),
+      m_currentVideoEffect(VIDEO_EFFECT_DEFAULT)
 {
-    mainWindow.setLandscapeOrientation();
-    mainWindow.setOrientationAngleLocked(true);
-    mainWindow.showFullScreen();
+}
 
-    // load the available effects
+void Controller::setup()
+{
     setupEffects();
 
     // initialize QCamDevice
     setupCamDevice();
-
-    connect(&mainWindow, SIGNAL(displayEntered()), this, SLOT(startPipeline()));
-    connect(&mainWindow, SIGNAL(displayExited()), this, SLOT(stopPipeline()));
     connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
 }
 
@@ -67,39 +54,29 @@ void Controller::setupCamDevice()
 
 void Controller::setVideoMode()
 {
-    device.videoMode()->activate();
+    m_device.videoMode()->activate();
 
     // we need to set here the values for the mode:
     // VideoSceneMode
-    QCamSceneMode(&device).set(SCENE_MODE_DEFAULT);
+    QCamSceneMode(&m_device).set(SCENE_MODE_DEFAULT);
     // zoom
     setZoom(ZOOM_DEFAULT);
     // VideoResolution
     setResolution(VIDEO_RESOLUTION_DEFAULT);
     // VideoWBSetting
-    QCamWhiteBalance(&device).setValue(WHITE_BALANCE_DEFAULT);
+    QCamWhiteBalance(&m_device).setValue(WHITE_BALANCE_DEFAULT);
     // color filter
     setColorFilter(COLOR_FILTER_DEFAULT);
     // VideoExposureSetting
-    QCamEvComp(&device).setValue(EV_COMPENSATION_DEFAULT);
+    QCamEvComp(&m_device).setValue(EV_COMPENSATION_DEFAULT);
     // VideoTorchSetting
-    device.videoMode()->setTorch(false);
+    m_device.videoMode()->setTorch(false);
 }
 
 void Controller::setupViewfinder()
 {
-    XvViewFinder *viewfinder = new XvViewFinder(&device);
-
-    viewfinder->setMinimumSize(mainWindow.size());
-    viewfinder->setMaximumSize(mainWindow.size());
-    viewfinder->setZValue(-1.0);
-    mainWindow.scene()->addItem(viewfinder);
-    mainWindow.ensureVisible(viewfinder);
-    viewfinder->setPos(0, 0);
-
-    device.setViewfinder(viewfinder);
-
-    connect(viewfinder, SIGNAL(mouseReleased()), this, SLOT(displayClicked()));
+    m_device.setViewfinder(m_viewFinder);
+    m_viewFinder->setCamDevice(&m_device);
 }
 
 void Controller::setupFileStorage()
@@ -110,12 +87,12 @@ void Controller::setupFileStorage()
     }
 
     // set the file naming pattern
-    device.setFileNaming(new QCamSimpleFileNaming(APP_FOLDER, INDEX_FILE, &device));
+    m_device.setFileNaming(new QCamSimpleFileNaming(APP_FOLDER, INDEX_FILE, &m_device));
 }
 void Controller::startPipeline()
 {
     if (ResourceManager::instance()->acquirePlaybackResources()) {
-        device.start();
+        m_device.start();
     } else {
         qCritical() << "Playback resources denied";
         resourcesLost();
@@ -124,7 +101,7 @@ void Controller::startPipeline()
 
 void Controller::stopPipeline()
 {
-    device.stop();
+    m_device.stop();
     ResourceManager::instance()->releaseResources();
 }
 
@@ -136,7 +113,7 @@ void Controller::setupEffects()
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
-        device.videoMode()->startVideoCapture();
+        m_device.videoMode()->startVideoCapture();
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -145,16 +122,16 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
-    device.videoMode()->stopVideoCapture();
+    m_device.videoMode()->stopVideoCapture();
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
         resourcesLost();
     }
 }
 
-void Controller::displayClicked()
+void Controller::shutterClicked()
 {
-    if (device.videoMode()->captureState() == QCamVideo::CaptureStopped) {
+    if (m_device.videoMode()->captureState() == QCamVideo::CaptureStopped) {
         startRecording();
         qCritical() << "Controller: recording started";
     } else {
@@ -185,8 +162,8 @@ void Controller::setResolution(Resolution value)
         return;
     }
 
-    if (QCamVideoResolution(&device).setValue(res)) {
-        currentResolution = value;
+    if (QCamVideoResolution(&m_device).setValue(res)) {
+        m_currentResolution = value;
     } else {
         qCritical() << "Error setting resolution " << value;
     }
@@ -194,8 +171,8 @@ void Controller::setResolution(Resolution value)
 
 void Controller::setZoom(double value)
 {
-    if (QCamZoom(&device).setValue(value)) {
-        currentZoom = value;
+    if (QCamZoom(&m_device).setValue(value)) {
+        m_currentZoom = value;
     } else {
         qCritical() << "Error setting zoom value " << value;
     }
@@ -229,8 +206,8 @@ void Controller::setColorFilter(ColorFilter value)
         return;
     }
 
-    if (QCamColourTone(&device).setValue(mode)) {
-        currentColorFilter = value;
+    if (QCamColourTone(&m_device).setValue(mode)) {
+        m_currentColorFilter = value;
     } else {
         qCritical() << "Error setting color effect " << value;
     }
@@ -238,9 +215,9 @@ void Controller::setColorFilter(ColorFilter value)
 
 void Controller::setVideoEffect(const QString &value)
 {
-    CamEffect *cameff = new CamEffect(&device, this);
+    CamEffect *cameff = new CamEffect(&m_device, this);
     if (cameff->setValue(EffectManager::instance()->getEffect(value))) {
-        currentVideoEffect = value;
+        m_currentVideoEffect = value;
     } else {
         qCritical() << "Error setting video effect " << value;
     }

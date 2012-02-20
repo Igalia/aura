@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QDeclarativeView view;
+    qmlRegisterType<Controller>("aura.controller", 1, 0, "Controller");
     qmlRegisterType<XvViewFinder>("aura.viewfinder", 1, 0, "ViewFinder");
     qDebug("opening qml files in %s", QML_PATH);
     view.setSource(QUrl::fromLocalFile(QML_PATH "aura.qml"));
