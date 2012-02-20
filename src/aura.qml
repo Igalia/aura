@@ -8,7 +8,7 @@ import aura.viewfinder 1.0
 
 Item {
     id: page
-    width: screen.displayHeight; height: screen.displayWidth
+    width: screen.displayWidth; height: screen.displayHeight
 
     Component.onCompleted: {
         screen.allowedOrientations = Screen.Landscape
