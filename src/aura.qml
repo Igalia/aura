@@ -88,5 +88,25 @@ Item {
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: effects.show()
         }
+
+        Item {
+            anchors.fill: parent
+            visible: !platformWindow.active
+
+            Rectangle {
+                anchors.fill: parent
+                color: "grey"
+            }
+
+            Text {
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+                font.pixelSize: UIConstants.FONT_XLARGE
+                font.family: UIConstants.FONT_FAMILY
+                text: "Camera is paused"
+            }
+        }
     }
 }
