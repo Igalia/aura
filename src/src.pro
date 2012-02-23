@@ -4,29 +4,26 @@ TARGET = "aura"
 QT += declarative
 CONFIG += meegotouch link_pkgconfig
 PKGCONFIG += gstreamer-video-0.10 glib-2.0 libresourceqt1
-LIBS += -lqcamera
-DEPENDPATH += . /usr/include/qcamera
-INCLUDEPATH += . /usr/include/qcamera
 
 # Input
 HEADERS += settings.h       \
            controller.h     \
-           xvviewfinder.h   \
            effect.h         \
            effectmanager.h  \
            debugutils.h     \
            cameffect.h      \
            qcamcapability_p.h \
            resourcemanager.h \
+           pipeline.h       \
 
-SOURCES += main.cpp         \
-           controller.cpp   \
-           xvviewfinder.cpp \
+SOURCES += controller.cpp   \
            effect.cpp       \
            effectmanager.cpp \
            debugutils.c     \
            cameffect.cpp    \
            resourcemanager.cpp \
+           pipeline.cpp     \
+           main.cpp         \
 #FORMS#
 
   unix {

@@ -1,11 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-// Paths for saving the pictures, and for the index file. Not really
-// nice when hard-coding "user".
-#include <QCamSceneMode>
-#include <QCamWhiteBalance>
-#include "controller.h"
+#include "pipeline.h"
 
 #define INTERNAL_EMMC_PATH        "/home/user/MyDocs"
 #define APP_FOLDER                INTERNAL_EMMC_PATH"/aura"
@@ -17,13 +13,13 @@
 
 // user configurable parameters
 #define ZOOM_DEFAULT              ZOOM_MIN
-#define VIDEO_RESOLUTION_DEFAULT  Controller::Medium
-#define COLOR_FILTER_DEFAULT      Controller::Normal
+#define VIDEO_RESOLUTION_DEFAULT  Pipeline::Medium
+#define COLOR_FILTER_DEFAULT      Pipeline::Normal
 #define VIDEO_EFFECT_DEFAULT      "Dice"
 
 // non user configurable parameters
-#define SCENE_MODE_DEFAULT        QCamSceneMode::Auto
-#define WHITE_BALANCE_DEFAULT     QCamWhiteBalance::Auto
+#define SCENE_MODE_DEFAULT        0
+#define WHITE_BALANCE_DEFAULT     0
 #define EV_COMPENSATION_DEFAULT   0.0
 
 // pixel resolutions in video mode
