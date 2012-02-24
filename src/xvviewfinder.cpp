@@ -5,6 +5,7 @@
 #include <QDeclarativeEngine>
 
 #include "xvviewfinder.h"
+#include "common.h"
 
 XvViewFinder::XvViewFinder(QDeclarativeItem *parent) :
     QDeclarativeItem(parent),
@@ -16,7 +17,7 @@ XvViewFinder::XvViewFinder(QDeclarativeItem *parent) :
     qDebug() << "loading ViewFinder.qml";
 
     QDeclarativeEngine engine;
-    QDeclarativeComponent component(&engine, QUrl::fromLocalFile("/usr/share/aura/ViewFinder.qml"));
+    QDeclarativeComponent component(&engine, QUrl::fromLocalFile(QML_PATH "ViewFinder.qml"));
     QDeclarativeItem *rect = dynamic_cast<QDeclarativeItem *>(component.create());
     rect->setParentItem(this);
 }
