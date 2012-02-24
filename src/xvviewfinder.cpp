@@ -2,6 +2,7 @@
 #include <gst/gstpad.h>
 #include <gst/interfaces/xoverlay.h>
 #include <QDeclarativeView>
+#include <QDeclarativeEngine>
 
 #include "xvviewfinder.h"
 
@@ -11,6 +12,13 @@ XvViewFinder::XvViewFinder(QDeclarativeItem *parent) :
     m_device(0)
 {
     setZValue(-1.0);
+
+    qDebug() << "loading ViewFinder.qml";
+
+    QDeclarativeEngine engine;
+    QDeclarativeComponent component(&engine, QUrl::fromLocalFile("/usr/share/aura/ViewFinder.qml"));
+    QDeclarativeItem *rect = dynamic_cast<QDeclarativeItem *>(component.create());
+    rect->setParentItem(this);
 }
 
 

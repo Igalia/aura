@@ -38,14 +38,6 @@ Item {
         ViewFinder {
             id: viewFinder
             anchors.fill: parent
-
-            Rectangle {
-                id: viewFinderColorkeyPainter
-                anchors.fill: parent
-                color: "#080810"
-
-                Component.onCompleted: console.debug("viewfinder colorkey painted")
-            }
         }
 
         Controller {
