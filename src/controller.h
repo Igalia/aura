@@ -11,8 +11,6 @@ class Controller : public QDeclarativeItem
 
  public:
     Controller(QDeclarativeItem *parent = 0);
-    void setupPipeline();
-    void setVideoMode();
     void setupEffects();
 
     // user to set user defined values
@@ -35,9 +33,9 @@ class Controller : public QDeclarativeItem
  private:
     Pipeline pipeline;
     // current config
-    double m_currentZoom;
-    Pipeline::Resolution m_currentResolution;
-    Pipeline::ColorFilter m_currentColorFilter;
-    QString m_currentVideoEffect;
+    double currentZoom;
+    Pipeline::Resolution currentResolution;
+    Pipeline::ColorFilter currentColorFilter;
+    QString currentVideoEffect;
 };
 #endif

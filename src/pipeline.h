@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include "settings.h"
+#include "gst/gst.h"
+#include <gst/interfaces/photography.h>
+#include <gst/interfaces/xoverlay.h>
+#include <gst/video/video.h>
 
 class Pipeline : public QObject
 {
@@ -27,6 +31,7 @@ class Pipeline : public QObject
     } ColorFilter;
 
     Pipeline(QObject *parent = 0);
+    ~Pipeline();
     void setupFileStorage();
     void setVideoMode();
     void setResolution(const Resolution value);
@@ -37,8 +42,13 @@ class Pipeline : public QObject
     void stop();
     void startRecording();
     void stopRecording();
+    void setWindowId(int winId);
+    void handleBusMessage(GstMessage *message);
 
  private:
-    
+    GstElement *camerabin;
+    GstElement *viewfinder;
+    GstElement *videoSrc;
+    GstElement *camSrc;
 };
 #endif

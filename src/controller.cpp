@@ -1,57 +1,33 @@
 #include <QDebug>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 #include "controller.h"
-#include "effectmanager.h"
-#include "cameffect.h"
+// #include "effectmanager.h"
+// #include "cameffect.h"
 #include "settings.h"
 #include "resourcemanager.h"
 
 Controller::Controller(QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
-      m_currentZoom(ZOOM_DEFAULT),
-      m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
-      m_currentColorFilter(COLOR_FILTER_DEFAULT),
-      m_currentVideoEffect(VIDEO_EFFECT_DEFAULT)
+      currentZoom(ZOOM_DEFAULT),
+      currentResolution(VIDEO_RESOLUTION_DEFAULT),
+      currentColorFilter(COLOR_FILTER_DEFAULT),
+      currentVideoEffect(VIDEO_EFFECT_DEFAULT)
 {
 }
 
 void Controller::setup()
 {
     setupEffects();
-
-    // initialize QCamDevice
-    setupPipeline();
     connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
-}
-
-void Controller::setupPipeline()
-{
-    // set the pipeline to video mode
-    setVideoMode();
-
-    // set the default effect
-    setVideoEffect(VIDEO_EFFECT_DEFAULT);
-}
-
-void Controller::setVideoMode()
-{
-    pipeline.setVideoMode();
 }
 
 void Controller::startPipeline()
 {
-    //code to get the winId
-    // int winId = 0;
-
-    // QList<QGraphicsView*> viewsList = scene()->views();
-
-    // if (viewsList.size() == 1) {
-    //     winId = viewsList[0]->effectiveWinId();
-    // } else {
-    //     qCritical() << "there is " << viewsList.size() << "views";
-    // }
-
+    pipeline.setWindowId(scene()->views()[0]->effectiveWinId());
     if (ResourceManager::instance()->acquirePlaybackResources()) {
+        qCritical() << "Controller: starting pipeline";
         pipeline.start();
     } else {
         qCritical() << "Playback resources denied";
@@ -61,18 +37,20 @@ void Controller::startPipeline()
 
 void Controller::stopPipeline()
 {
+    qCritical() << "Controller: stopping pipeline";
     pipeline.stop();
     ResourceManager::instance()->releaseResources();
 }
 
 void Controller::setupEffects()
 {
-    EffectManager::setup(this);
+    // EffectManager::setup(this);
 }
 
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
+        qCritical() << "Controller: starting recording";
         pipeline.startRecording();
     } else {
         qCritical() << "Recording resources denied";
@@ -82,6 +60,7 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
+    qCritical() << "Controller: stopping recording";
     pipeline.stopRecording();
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
@@ -102,21 +81,25 @@ void Controller::shutterClicked()
 
 void Controller::setResolution(Pipeline::Resolution value)
 {
+    currentResolution = value;
     pipeline.setResolution(value);
 }
 
 void Controller::setZoom(double value)
 {
+    currentZoom = value;
     pipeline.setZoom(value);
 }
 
 void Controller::setColorFilter(Pipeline::ColorFilter value)
 {
+    currentColorFilter = value;
     pipeline.setColorFilter(value);
 }
 
 void Controller::setVideoEffect(const QString &value)
 {
+    currentVideoEffect = value;
     pipeline.setVideoEffect(value);
 }
 

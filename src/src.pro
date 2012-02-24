@@ -3,24 +3,24 @@ TARGET = "aura"
 
 QT += declarative
 CONFIG += meegotouch link_pkgconfig
-PKGCONFIG += gstreamer-video-0.10 glib-2.0 libresourceqt1
+PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1
+LIBS += -lgstinterfaces-0.10 -lgstphotography-0.10 -lgstpbutils-0.10
 
 # Input
 HEADERS += settings.h       \
            controller.h     \
-           effect.h         \
-           effectmanager.h  \
+#           effect.h         \
+#           effectmanager.h  \
            debugutils.h     \
-           cameffect.h      \
-           qcamcapability_p.h \
+#           cameffect.h      \
            resourcemanager.h \
            pipeline.h       \
 
 SOURCES += controller.cpp   \
-           effect.cpp       \
-           effectmanager.cpp \
+#           effect.cpp       \
+#           effectmanager.cpp \
            debugutils.c     \
-           cameffect.cpp    \
+#           cameffect.cpp    \
            resourcemanager.cpp \
            pipeline.cpp     \
            main.cpp         \
