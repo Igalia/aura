@@ -7,11 +7,7 @@
 #include "controller.h"
 #include "xvviewfinder.h"
 
-#ifdef __i386__
-#define QML_PATH "src/"
-#else
-#define QML_PATH "/usr/share/aura/"
-#endif
+#include "common.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,7 +19,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<Controller>("aura.controller", 1, 0, "Controller");
     qmlRegisterType<XvViewFinder>("aura.viewfinder", 1, 0, "ViewFinder");
     qDebug("opening qml files in %s", QML_PATH);
-    view.setSource(QUrl::fromLocalFile(QML_PATH "aura.qml"));
+    view.setSource(QUrl::fromLocalFile(MAIN_QML_FILE));
     view.showFullScreen();
 
     int ret = app.exec();
