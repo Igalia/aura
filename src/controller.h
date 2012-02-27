@@ -32,6 +32,7 @@ class Controller : public QDeclarativeItem
 
  private:
     Pipeline pipeline;
+    bool recording;
     // current config
     double currentZoom;
     Pipeline::Resolution currentResolution;

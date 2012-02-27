@@ -46,6 +46,8 @@ class Pipeline : public QObject
     void handleBusMessage(GstMessage *message);
 
  private:
+    QString nextFileName();
+
     GstElement *camerabin;
     GstElement *viewfinder;
     GstElement *videoSrc;

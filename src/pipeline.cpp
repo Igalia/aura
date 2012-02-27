@@ -1,8 +1,13 @@
 #include <QDebug>
 #include <QDir>
+#include <QDate>
+#include <QStringList>
+
 #include "pipeline.h"
 #include <gst/pbutils/encoding-profile.h>
 #include <gst/pbutils/encoding-target.h>
+#include <gst/basecamerabinsrc/gstcamerabin-enum.h>
+
 
 gboolean gStreamerMessageWatcher(GstBus *bus,
                                  GstMessage *message,
@@ -12,14 +17,15 @@ gboolean gStreamerMessageWatcher(GstBus *bus,
 
     static_cast<Pipeline*>(data)->handleBusMessage(message);
 
-    // We always return true to keep the event source running (see
-    // documentation for gst_bus_add_watch).
     return TRUE;
 }
 
 Pipeline::Pipeline(QObject *parent)
     : QObject(parent),
-      camerabin(0)
+      camerabin(0),
+      viewfinder(0),
+      videoSrc(0),
+      camSrc(0)
 {
     camerabin = gst_element_factory_make("camerabin2", NULL);
     g_object_set (camerabin, "post-previews", FALSE, NULL);
@@ -61,12 +67,12 @@ Pipeline::Pipeline(QObject *parent)
     gst_object_unref(bus);
 
     // set initial values
-    setupFileStorage();
     setVideoMode();
     setZoom(ZOOM_DEFAULT);
     setResolution(VIDEO_RESOLUTION_DEFAULT);
     setColorFilter(COLOR_FILTER_DEFAULT);
     setVideoEffect(VIDEO_EFFECT_DEFAULT);
+    setupFileStorage();
 }
 
 Pipeline::~Pipeline()
@@ -76,7 +82,7 @@ Pipeline::~Pipeline()
 
 void Pipeline::setVideoMode()
 {
-    g_object_set(camerabin, "mode", 1, NULL);
+    g_object_set(camerabin, "mode", MODE_VIDEO, NULL);
 
     // set auto scene mode
     gst_photography_set_scene_mode(GST_PHOTOGRAPHY(videoSrc),
@@ -93,10 +99,8 @@ void Pipeline::setupFileStorage()
     if (!QDir::root().exists(APP_FOLDER)) {
         QDir::root().mkdir(APP_FOLDER);
     }
-
-    // // set the file naming pattern
-    // m_device.setFileNaming(new QCamSimpleFileNaming(APP_FOLDER, INDEX_FILE, &m_device));
 }
+
 void Pipeline::start()
 {
     gst_element_set_state(camerabin, GST_STATE_PLAYING);
@@ -104,11 +108,17 @@ void Pipeline::start()
 
 void Pipeline::stop()
 {
-    gst_element_set_state(camerabin, GST_STATE_NULL);
+    gst_element_set_state(camerabin, GST_STATE_PAUSED);
 }
 
 void Pipeline::startRecording()
 {
+    // set next file name
+    g_object_set(camerabin,
+                 "location",
+                 nextFileName().toUtf8().constData(),
+                 NULL);
+
     g_signal_emit_by_name(camerabin, "start-capture", 0);
 }
 
@@ -292,4 +302,18 @@ void Pipeline::handleBusMessage(GstMessage *message)
     default:
         break;
     }
+}
+
+QString Pipeline::nextFileName()
+{
+    QString date = QDate::currentDate().toString("yyMMdd");
+
+    QDir dir(APP_FOLDER);
+    QStringList filters(QString("*%1*").arg(date));
+    dir.setNameFilters(filters);
+    int index = dir.count() + 1;
+
+    QString filename(APP_FOLDER);
+    filename += QDir::separator() + QString("%1_%2.%3").arg(date).arg(index).arg(FILE_SUFFIX);
+    return filename;
 }

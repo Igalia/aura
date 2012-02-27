@@ -10,6 +10,7 @@
 
 Controller::Controller(QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
+      recording(false),
       currentZoom(ZOOM_DEFAULT),
       currentResolution(VIDEO_RESOLUTION_DEFAULT),
       currentColorFilter(COLOR_FILTER_DEFAULT),
@@ -50,8 +51,9 @@ void Controller::setupEffects()
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
-        qCritical() << "Controller: starting recording";
+        qCritical() << "Controller: recording started";
         pipeline.startRecording();
+        recording = true;
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -60,8 +62,9 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
-    qCritical() << "Controller: stopping recording";
+    qCritical() << "Controller: recording stopped";
     pipeline.stopRecording();
+    recording = false;
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
         resourcesLost();
@@ -70,13 +73,11 @@ void Controller::stopRecording()
 
 void Controller::shutterClicked()
 {
-    // if (m_device.videoMode()->captureState() == QCamVideo::CaptureStopped) {
-    //     startRecording();
-    //     qCritical() << "Controller: recording started";
-    // } else {
-    //     stopRecording();
-    //     qCritical() << "Controller: recording stopped";
-    // }
+    if (!recording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
 }
 
 void Controller::setResolution(Pipeline::Resolution value)
