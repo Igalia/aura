@@ -3,8 +3,8 @@ TARGET = "aura"
 
 QT += declarative
 CONFIG += meegotouch link_pkgconfig
-PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1
-LIBS += -lgstinterfaces-0.10 -lgstphotography-0.10 -lgstpbutils-0.10
+PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1 gstreamer-plugins-bad-0.10 \
+             gstreamer-pbutils-0.10 gstreamer-interfaces-0.10
 
 # Input
 HEADERS += settings.h       \
