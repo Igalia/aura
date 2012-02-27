@@ -31,12 +31,12 @@ class Controller : public QDeclarativeItem
     void resourcesLost();
 
  private:
-    Pipeline pipeline;
-    bool recording;
+    Pipeline m_pipeline;
+    bool m_recording;
     // current config
-    double currentZoom;
-    Pipeline::Resolution currentResolution;
-    Pipeline::ColorFilter currentColorFilter;
-    QString currentVideoEffect;
+    double m_currentZoom;
+    Pipeline::Resolution m_currentResolution;
+    Pipeline::ColorFilter m_currentColorFilter;
+    QString m_currentVideoEffect;
 };
 #endif
