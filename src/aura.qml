@@ -16,7 +16,6 @@ Item {
 
     property bool windowActive : platformWindow.active
     property int animationDuration: 150
-    property bool recording: false
 
     Item {
         id: mainPage
@@ -45,6 +44,7 @@ Item {
         Controller {
             id: controller
             Component.onCompleted: setup()
+            onRecordingChanged: console.debug("recording changed to " + recording)
         }
 
         Effects {
@@ -64,7 +64,6 @@ Item {
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: {
                 console.debug("shutter clicked")
-                recording = !recording
                 controller.shutterClicked()
             }
         }
@@ -76,7 +75,7 @@ Item {
                 bottom: parent.bottom
             }
             iconId: "toolbar-view-menu"
-            opacity: effects.visible || recording ? 0 : 1
+            opacity: effects.visible || controller.recording ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: effects.show()

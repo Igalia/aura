@@ -10,6 +10,10 @@ class Controller : public QDeclarativeItem
     Q_OBJECT
 
  public:
+    Q_PROPERTY(bool recording
+               READ recording
+               WRITE setRecording
+               NOTIFY recordingChanged)
     Controller(QDeclarativeItem *parent = 0);
     void setupEffects();
 
@@ -18,6 +22,14 @@ class Controller : public QDeclarativeItem
     void setZoom(const double value);
     void setColorFilter(const Pipeline::ColorFilter value);
     void setVideoEffect(const QString &value);
+
+    bool recording() { return m_recording; };
+
+public slots:
+    void setRecording(bool recording);
+
+signals:
+    void recordingChanged(bool recording);
 
  public slots:
     void setup();

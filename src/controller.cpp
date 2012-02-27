@@ -53,7 +53,7 @@ void Controller::startRecording()
     if (ResourceManager::instance()->acquireRecordingResources()) {
         qCritical() << "Controller: recording started";
         m_pipeline.startRecording();
-        m_recording = true;
+        setRecording(true);
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -64,7 +64,7 @@ void Controller::stopRecording()
 {
     qCritical() << "Controller: recording stopped";
     m_pipeline.stopRecording();
-    m_recording = false;
+    setRecording(false);
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
         resourcesLost();
@@ -110,3 +110,9 @@ void Controller::resourcesLost()
     stopRecording();
     stopPipeline();
 }
+
+void Controller::setRecording(bool recording)
+{
+  m_recording = recording;
+  emit recordingChanged(recording);
+};
