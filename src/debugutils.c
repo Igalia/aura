@@ -96,9 +96,11 @@ debug_dump_get_element_params (GstElement * element)
 {
   gchar *param_name = NULL;
   GParamSpec **properties, *property;
-  GValue value = { 0, };
+  GValue value;
   guint i, number_of_properties;
   gchar *tmp, *value_str;
+
+  memset(&value, 0, sizeof(GValue));
 
   /* get paramspecs and show non-default properties */
   properties =

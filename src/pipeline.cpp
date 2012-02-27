@@ -224,6 +224,7 @@ void Pipeline::setColorFilter(ColorFilter value)
 
 void Pipeline::setVideoEffect(const QString &value)
 {
+    Q_UNUSED(value);
     // CamEffect *cameff = new CamEffect(&m_device, this);
     // if (cameff->setValue(EffectManager::instance()->getEffect(value))) {
     //     m_currentVideoEffect = value;
