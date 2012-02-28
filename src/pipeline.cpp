@@ -42,7 +42,7 @@ Pipeline::Pipeline(QObject *parent)
 
 
     // video
-    videoSrc = gst_element_factory_make("subdevsrc", NULL);
+    videoSrc = gst_element_factory_make("subdevsrc2", NULL);
     g_object_set(videoSrc, "queue-size", 5, NULL);
     camSrc = gst_element_factory_make("camsrcbin", NULL);
     g_object_set(camSrc, "video-source", videoSrc, NULL);
