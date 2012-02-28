@@ -22,6 +22,7 @@ void Controller::setup()
 {
     setupEffects();
     connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
+    connect(&m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
 }
 
 void Controller::startPipeline()
@@ -51,9 +52,7 @@ void Controller::setupEffects()
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
-        qCritical() << "Controller: recording started";
         m_pipeline.startRecording();
-        setRecording(true);
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -62,9 +61,7 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
-    qCritical() << "Controller: recording stopped";
     m_pipeline.stopRecording();
-    setRecording(false);
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
         resourcesLost();
@@ -116,3 +113,13 @@ void Controller::setRecording(bool recording)
   m_recording = recording;
   emit recordingChanged(recording);
 };
+
+void Controller::idleChanged(bool isIdle)
+{
+    setRecording(!isIdle);
+    if (m_recording) {
+        qCritical() << "Controller: recording has started";
+    } else {
+        qCritical() << "Controller: recording has stopped";
+    }
+}

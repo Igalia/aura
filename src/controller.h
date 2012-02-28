@@ -41,6 +41,7 @@ signals:
 
  private slots:
     void resourcesLost();
+    void idleChanged(bool isIdle);
 
  private:
     Pipeline m_pipeline;

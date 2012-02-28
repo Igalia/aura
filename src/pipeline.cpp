@@ -20,6 +20,21 @@ gboolean gStreamerMessageWatcher(GstBus *bus,
     return TRUE;
 }
 
+static void
+idleNotificationCallback(GObject *,
+                         GParamSpec *,
+                         gpointer user_data)
+{
+    Pipeline *pipeline = static_cast<Pipeline*>(user_data);
+
+    // This signal gets sent with queued connection always to avoid
+    // running stuff within the scope of the property notifications.
+    QMetaObject::invokeMethod(pipeline,
+                              "idleChanged",
+                              Qt::QueuedConnection,
+                              Q_ARG(bool, pipeline->isIdle()));
+}
+
 Pipeline::Pipeline(QObject *parent)
     : QObject(parent),
       camerabin(0),
@@ -65,6 +80,12 @@ Pipeline::Pipeline(QObject *parent)
     GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(camerabin));
     gst_bus_add_watch(bus, gStreamerMessageWatcher, this);
     gst_object_unref(bus);
+
+    // idle handler
+    g_signal_connect(G_OBJECT(camerabin),
+                     "notify::idle",
+                     G_CALLBACK(idleNotificationCallback),
+                     this);
 
     // set initial values
     setVideoMode();
@@ -317,4 +338,11 @@ QString Pipeline::nextFileName()
     QString filename(APP_FOLDER);
     filename += QDir::separator() + QString("%1_%2.%3").arg(date).arg(index).arg(FILE_SUFFIX);
     return filename;
+}
+
+bool Pipeline::isIdle()
+{
+    gboolean result = FALSE;
+    g_object_get(camerabin, "idle", &result, NULL);
+    return (TRUE == result);
 }

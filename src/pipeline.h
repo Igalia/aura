@@ -44,6 +44,10 @@ class Pipeline : public QObject
     void stopRecording();
     void setWindowId(int winId);
     void handleBusMessage(GstMessage *message);
+    bool isIdle();
+
+ signals:
+    void idleChanged(bool isIdle);
 
  private:
     QString nextFileName();
