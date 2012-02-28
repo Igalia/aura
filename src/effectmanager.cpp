@@ -113,3 +113,14 @@ EffectManager::dumpEffects()
                  << m_effects[i]->desc();
     }
 }
+
+QStringList EffectManager::effectNames()
+{
+    if (m_effectNames.isEmpty()) {
+        for (QList<Effect*>::const_iterator element = m_effects.constBegin();
+             element != m_effects.constEnd(); element++) {
+            m_effectNames << (*element)->name();
+        }
+    }
+    return m_effectNames;
+}

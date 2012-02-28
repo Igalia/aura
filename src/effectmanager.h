@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QList>
+#include <QStringList>
 
 #include "effect.h"
 
@@ -15,6 +16,8 @@ public:
 
    Effect *getEffect(const QString &name) const;
 
+   Q_INVOKABLE QStringList effectNames();
+
 private:
    EffectManager(QObject *parent = 0);
 
@@ -24,4 +27,5 @@ private:
    void dumpEffects();
 
    QList<Effect *> m_effects;
+   QStringList m_effectNames;
 };
