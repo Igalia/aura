@@ -22,6 +22,10 @@ EffectManager::setup(QObject *parent)
 EffectManager*
 EffectManager::instance()
 {
+    if (!instancePointer) {
+        instancePointer = new EffectManager;
+    }
+
     Q_ASSERT(0 != instancePointer);
 
     return instancePointer;
