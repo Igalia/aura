@@ -110,8 +110,11 @@ void Controller::resourcesLost()
 
 void Controller::setRecording(bool recording)
 {
-  m_recording = recording;
-  emit recordingChanged(recording);
+    bool emitSignal = m_recording != recording;
+    m_recording = recording;
+    if (emitSignal) {
+        emit recordingChanged(recording);
+    }
 };
 
 void Controller::idleChanged(bool isIdle)
