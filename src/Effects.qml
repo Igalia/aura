@@ -47,11 +47,12 @@ Rectangle {
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
         }
 
-        Button {
-            text: "Radioactiv"
-        }
-        Button {
-            text: "Hulk"
+        Repeater {
+            model: effectManager.effectNames()
+            Button {
+                property string effectName: modelData
+                text: effectName
+            }
         }
     }
 
