@@ -22,12 +22,12 @@ class Controller : public QDeclarativeItem
     void setResolution(const Pipeline::Resolution value);
     void setZoom(const double value);
     void setColorFilter(const Pipeline::ColorFilter value);
-    void setVideoEffect(const QString &value);
 
     bool recording() { return m_recording; };
 
 public slots:
     void setRecording(bool recording);
+    void setVideoEffect(const QString &value);
 
 signals:
     void recordingChanged(bool recording);
