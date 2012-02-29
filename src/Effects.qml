@@ -10,36 +10,27 @@ Rectangle {
     id: effectsPage
     anchors.fill: parent
     color: "transparent"
-    opacity: 0
-    visible: opacity > 0
+    visible: false
 
-    property real backgroundOpacity: 0
-    property real objectsOpacity: 1
     property int animationDuration: 150
 
-    Behavior on opacity
-    {
-        NumberAnimation { duration: animationDuration }
-    }
 
     function show() {
-        opacity = 1
+        visible = true
     }
 
     function hide() {
-        opacity = 0
+        visible = false
     }
 
     Rectangle {
         id: backgroundRectangle
         anchors.fill: parent
         color: "#080810"
-        opacity: backgroundOpacity
     }
 
     ButtonColumn {
         id: effectColumn
-        opacity: objectsOpacity
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
@@ -58,7 +49,6 @@ Rectangle {
 
     Button {
         id: acceptButton
-        opacity: objectsOpacity
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
