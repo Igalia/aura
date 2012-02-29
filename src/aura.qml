@@ -49,6 +49,11 @@ Item {
         Effects {
             id: effects
             animationDuration: page.animationDuration
+
+            onEffectChanged: {
+                console.debug("effect changed to " + effectName)
+                controller.setVideoEffect(effectName)
+            }
         }
 
         ToolIcon {

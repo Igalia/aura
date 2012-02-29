@@ -107,6 +107,7 @@ void Controller::setColorFilter(Pipeline::ColorFilter value)
 void Controller::setVideoEffect(const QString &value)
 {
     if (m_currentVideoEffect != value) {
+        qDebug() << "setting video effect" << value;
         m_currentVideoEffect = value;
         m_pipeline->setVideoEffect(value);
     }

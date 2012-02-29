@@ -27,7 +27,6 @@ class Controller : public QDeclarativeItem
 
 public slots:
     void setRecording(bool recording);
-    void setVideoEffect(const QString &value);
 
 signals:
     void recordingChanged(bool recording);
@@ -38,6 +37,7 @@ signals:
     void startRecording();
     void stopRecording();
     void shutterClicked();
+    void setVideoEffect(const QString &value);
 
  private slots:
     void resourcesLost();
