@@ -51,10 +51,18 @@ class Pipeline : public QObject
 
  private:
     QString nextFileName();
+    void setupEffectBins();
 
     GstElement *camerabin;
     GstElement *viewfinder;
     GstElement *videoSrc;
     GstElement *camSrc;
+
+    GstElement *vfEffectBin;
+    GstElement *vfPreValve;
+    GstElement *vfPostValve;
+    GstElement *vfEffect;
+    GstElement *vfPreCS;
+    GstElement *vfPostCS;
 };
 #endif

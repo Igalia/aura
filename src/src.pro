@@ -12,18 +12,16 @@ QMAKE_CXXFLAGS_DEBUG += -g -O0 -Werror
 # Input
 HEADERS += settings.h       \
            controller.h     \
-#           effect.h         \
-#           effectmanager.h  \
+           effect.h         \
+           effectmanager.h  \
            debugutils.h     \
-#           cameffect.h      \
            resourcemanager.h \
            pipeline.h       \
 
 SOURCES += controller.cpp   \
-#           effect.cpp       \
-#           effectmanager.cpp \
+           effect.cpp       \
+           effectmanager.cpp \
            debugutils.c     \
-#           cameffect.cpp    \
            resourcemanager.cpp \
            pipeline.cpp     \
            main.cpp         \

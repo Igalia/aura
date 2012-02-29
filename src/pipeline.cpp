@@ -4,6 +4,9 @@
 #include <QStringList>
 
 #include "pipeline.h"
+#include "effectmanager.h"
+#include "effect.h"
+
 #include <gst/pbutils/encoding-profile.h>
 #include <gst/pbutils/encoding-target.h>
 #include <gst/basecamerabinsrc/gstcamerabin-enum.h>
@@ -89,11 +92,12 @@ Pipeline::Pipeline(QObject *parent)
 
     // set initial values
     setVideoMode();
+    setupFileStorage();
+    setupEffectBins();
     setZoom(ZOOM_DEFAULT);
     setResolution(VIDEO_RESOLUTION_DEFAULT);
     setColorFilter(COLOR_FILTER_DEFAULT);
     setVideoEffect(VIDEO_EFFECT_DEFAULT);
-    setupFileStorage();
 }
 
 Pipeline::~Pipeline()
@@ -245,13 +249,29 @@ void Pipeline::setColorFilter(ColorFilter value)
 
 void Pipeline::setVideoEffect(const QString &value)
 {
-    Q_UNUSED(value);
-    // CamEffect *cameff = new CamEffect(&m_device, this);
-    // if (cameff->setValue(EffectManager::instance()->getEffect(value))) {
-    //     m_currentVideoEffect = value;
-    // } else {
-    //     qCritical() << "Error setting video effect " << value;
-    // }
+    Effect *newEffect = EffectManager::instance()->getEffect(value);
+    qCritical() << "setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
+
+    // close valves
+    g_object_set(vfPreValve, "drop", TRUE, NULL);
+
+    // unlink current effect, remove and destroy it
+    gst_element_unlink_many(vfPreCS, vfEffect, vfPostCS, NULL);
+    g_object_ref(vfEffect);
+    gst_bin_remove(GST_BIN(vfEffectBin), vfEffect);
+    gst_element_set_state(vfEffect, GST_STATE_NULL);
+    g_object_unref(GST_OBJECT(vfEffect));
+
+    vfEffect = gst_parse_bin_from_description(newEffect->desc().toUtf8(), TRUE, NULL);
+
+    // add new effect to the bin and link it
+    gst_bin_add(GST_BIN(vfEffectBin), vfEffect);
+    gst_element_link_many(vfPreCS, vfEffect, vfPostCS, NULL);
+
+    gst_element_set_state(vfEffect, GST_STATE_PAUSED);
+
+    //open valve
+    g_object_set(vfPreValve, "drop", FALSE, NULL);
 }
 
 void Pipeline::setWindowId(int winId)
@@ -326,6 +346,13 @@ void Pipeline::handleBusMessage(GstMessage *message)
     }
 }
 
+bool Pipeline::isIdle()
+{
+    gboolean result = FALSE;
+    g_object_get(camerabin, "idle", &result, NULL);
+    return (TRUE == result);
+}
+
 QString Pipeline::nextFileName()
 {
     QString date = QDate::currentDate().toString("yyMMdd");
@@ -340,9 +367,28 @@ QString Pipeline::nextFileName()
     return filename;
 }
 
-bool Pipeline::isIdle()
+void Pipeline::setupEffectBins()
 {
-    gboolean result = FALSE;
-    g_object_get(camerabin, "idle", &result, NULL);
-    return (TRUE == result);
+    vfEffectBin = gst_bin_new(NULL);
+    vfPreValve = gst_element_factory_make("valve", NULL);
+    vfPreCS = gst_element_factory_make("ffmpegcolorspace", NULL);
+    vfPostCS = gst_element_factory_make("ffmpegcolorspace", NULL);
+
+    // This element will contain the effect bin. At this point we set
+    // an identity element so no effect is applied
+    vfEffect = gst_element_factory_make("identity", NULL);
+
+    gst_bin_add_many(GST_BIN(vfEffectBin), vfPreValve, vfPreCS, vfEffect, vfPostCS, NULL);
+    gst_element_link_many(vfPreValve, vfPreCS, vfEffect, vfPostCS, NULL);
+
+    GstPad *pad;
+    pad = gst_element_get_static_pad(vfPreValve, "sink");
+    gst_element_add_pad(vfEffectBin, gst_ghost_pad_new("sink", pad));
+    gst_object_unref(GST_OBJECT(pad));
+
+    pad = gst_element_get_static_pad(vfPostCS, "src");
+    gst_element_add_pad(vfEffectBin, gst_ghost_pad_new("src", pad));
+    gst_object_unref(GST_OBJECT(pad));
+
+    g_object_set(camerabin, "viewfinder-filter", vfEffectBin, NULL);
 }

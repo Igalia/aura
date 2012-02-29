@@ -3,34 +3,37 @@
 #include <QGraphicsView>
 
 #include "controller.h"
-// #include "effectmanager.h"
-// #include "cameffect.h"
+#include "effectmanager.h"
 #include "settings.h"
 #include "resourcemanager.h"
 
 Controller::Controller(QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
+      m_pipeline(0),
       m_recording(false),
       m_currentZoom(ZOOM_DEFAULT),
       m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
       m_currentColorFilter(COLOR_FILTER_DEFAULT),
       m_currentVideoEffect(VIDEO_EFFECT_DEFAULT)
 {
+    setupEffects();
+    m_pipeline = new Pipeline();
+
+    connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
+    connect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
 }
 
-void Controller::setup()
+Controller::~Controller()
 {
-    setupEffects();
-    connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
-    connect(&m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
+    delete m_pipeline;
 }
 
 void Controller::startPipeline()
 {
-    m_pipeline.setWindowId(scene()->views()[0]->effectiveWinId());
+    m_pipeline->setWindowId(scene()->views()[0]->effectiveWinId());
     if (ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Controller: starting pipeline";
-        m_pipeline.start();
+        m_pipeline->start();
     } else {
         qCritical() << "Playback resources denied";
         resourcesLost();
@@ -40,19 +43,19 @@ void Controller::startPipeline()
 void Controller::stopPipeline()
 {
     qCritical() << "Controller: stopping pipeline";
-    m_pipeline.stop();
+    m_pipeline->stop();
     ResourceManager::instance()->releaseResources();
 }
 
 void Controller::setupEffects()
 {
-    // EffectManager::setup(this);
+    EffectManager::setup(this);
 }
 
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
-        m_pipeline.startRecording();
+        m_pipeline->startRecording();
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -61,7 +64,7 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
-    m_pipeline.stopRecording();
+    m_pipeline->stopRecording();
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
         resourcesLost();
@@ -79,26 +82,34 @@ void Controller::shutterClicked()
 
 void Controller::setResolution(Pipeline::Resolution value)
 {
-    m_currentResolution = value;
-    m_pipeline.setResolution(value);
+    if (m_currentResolution != value) {
+        m_currentResolution = value;
+        m_pipeline->setResolution(value);
+    }
 }
 
 void Controller::setZoom(double value)
 {
-    m_currentZoom = value;
-    m_pipeline.setZoom(value);
+    if (m_currentZoom != value) {
+        m_currentZoom = value;
+        m_pipeline->setZoom(value);
+    }
 }
 
 void Controller::setColorFilter(Pipeline::ColorFilter value)
 {
-    m_currentColorFilter = value;
-    m_pipeline.setColorFilter(value);
+    if (m_currentColorFilter != value) {
+        m_currentColorFilter = value;
+        m_pipeline->setColorFilter(value);
+    }
 }
 
 void Controller::setVideoEffect(const QString &value)
 {
-    m_currentVideoEffect = value;
-    m_pipeline.setVideoEffect(value);
+    if (m_currentVideoEffect != value) {
+        m_currentVideoEffect = value;
+        m_pipeline->setVideoEffect(value);
+    }
 }
 
 void Controller::resourcesLost()

@@ -103,7 +103,9 @@ void
 EffectManager::dumpEffects()
 {
     for(int i = 0; i < m_effects.size(); i++) {
-        qDebug() << "Effect"
-                 << m_effects[i]->name();
+        qDebug() << "Effect: "
+                 << m_effects[i]->name()
+                 << " pipeline: "
+                 << m_effects[i]->desc();
     }
 }

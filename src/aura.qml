@@ -43,7 +43,6 @@ Item {
 
         Controller {
             id: controller
-            Component.onCompleted: setup()
             onRecordingChanged: console.debug("recording changed to " + recording)
         }
 

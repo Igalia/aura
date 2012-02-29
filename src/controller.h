@@ -15,6 +15,7 @@ class Controller : public QDeclarativeItem
                WRITE setRecording
                NOTIFY recordingChanged)
     Controller(QDeclarativeItem *parent = 0);
+    ~Controller();
     void setupEffects();
 
     // user to set user defined values
@@ -32,7 +33,6 @@ signals:
     void recordingChanged(bool recording);
 
  public slots:
-    void setup();
     void startPipeline();
     void stopPipeline();
     void startRecording();
@@ -44,7 +44,7 @@ signals:
     void idleChanged(bool isIdle);
 
  private:
-    Pipeline m_pipeline;
+    Pipeline *m_pipeline;
     bool m_recording;
     // current config
     double m_currentZoom;
