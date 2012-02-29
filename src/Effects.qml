@@ -29,20 +29,33 @@ Rectangle {
         color: "#080810"
     }
 
-    ButtonColumn {
-        id: effectColumn
+    Flickable {
+        id: flickable
         anchors {
             top: parent.top
-            horizontalCenter: parent.horizontalCenter
+            left: parent.left
+            right: parent.right
+            bottom: acceptButton.top
             topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
+            leftMargin: UIConstants.DEFAULT_MARGIN
+            rightMargin: UIConstants.DEFAULT_MARGIN
         }
+        contentHeight: effectColumn.height
+        clip: true
 
-        Repeater {
-            model: effectManager.effectNames()
-            Button {
-                property string effectName: modelData
-                text: effectName
+        ButtonColumn {
+            id: effectColumn
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            Repeater {
+                model: effectManager.effectNames()
+                Button {
+                    property string effectName: modelData
+                    text: effectName
+                }
             }
         }
     }
@@ -52,6 +65,7 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
+            topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
         }
         text: "Accept"
