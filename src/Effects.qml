@@ -36,14 +36,19 @@ Rectangle {
             top: parent.top
             left: parent.left
             right: parent.right
-            bottom: acceptButton.top
+            bottom: acceptButtonItem.top
             topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
             leftMargin: UIConstants.DEFAULT_MARGIN
             rightMargin: UIConstants.DEFAULT_MARGIN
         }
-        contentHeight: effectColumn.height
+        contentHeight: flickableButtonBorder.height
         clip: true
+
+        ButtonBorder {
+            id: flickableButtonBorder
+            anchors.fill: effectColumn
+        }
 
         ButtonColumn {
             id: effectColumn
@@ -63,19 +68,30 @@ Rectangle {
         }
     }
 
-    Button {
-        id: acceptButton
+    Item {
+        id: acceptButtonItem
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
             topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
         }
-        text: "Accept"
-        font.family: UIConstants.FONT_FAMILY
-        onClicked: {
-            console.debug("accept")
-            effectsPage.hide()
+        width: acceptButtonBorder.width
+        height: acceptButtonBorder.height
+
+        ButtonBorder {
+            id: acceptButtonBorder
+            anchors.fill: acceptButton
+        }
+
+        Button {
+            id: acceptButton
+            text: "Accept"
+            font.family: UIConstants.FONT_FAMILY
+            onClicked: {
+                console.debug("accept")
+                effectsPage.hide()
+            }
         }
     }
 }
