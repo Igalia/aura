@@ -54,15 +54,14 @@ class Pipeline : public QObject
     void setupEffectBins();
 
     GstElement *camerabin;
-    GstElement *viewfinder;
     GstElement *videoSrc;
-    GstElement *camSrc;
+    GstElement *viewfinder;
 
-    GstElement *vfEffectBin;
-    GstElement *vfPreValve;
-    GstElement *vfEffect;
-    GstElement *vfPreCS;
-    GstElement *vfPostCS;
-    GstElement *vfCapsFilter;
+    GstElement *effectBin;
+    GstElement *effectPreValve;
+    GstElement *effect;
+    GstElement *effectPreCS;
+    GstElement *effectPostCS;
+    GstElement *effectCapsFilter;
 };
 #endif

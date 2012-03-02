@@ -41,43 +41,62 @@ idleNotificationCallback(GObject *,
 Pipeline::Pipeline(QObject *parent)
     : QObject(parent),
       camerabin(0),
-      viewfinder(0),
       videoSrc(0),
-      camSrc(0)
+      viewfinder(0),
+      effectBin(0),
+      effectPreValve(0),
+      effect(0),
+      effectPreCS(0),
+      effectPostCS(0),
+      effectCapsFilter(0)
 {
-    camerabin = gst_element_factory_make("camerabin2", NULL);
-    g_object_set (camerabin, "post-previews", FALSE, NULL);
-    g_object_set (camerabin, "flags", 0xf, NULL);
+    // camerabin
+    camerabin = gst_element_factory_make("camerabin", NULL);
+    g_object_set (camerabin, "framerate-rounding", TRUE, NULL);
 
-    // audio
+    // video source
+    videoSrc = gst_element_factory_make("subdevsrc", NULL);
+    g_object_set(videoSrc, "queue-size", 5, NULL);
+    g_object_set (G_OBJECT (camerabin), "video-source", videoSrc, NULL);
+
+    // video encoder
+    GstElement *videoEnc = gst_element_factory_make("dsph264enc", NULL);
+    g_object_set(camerabin, "video-encoder", videoEnc, NULL);
+
+    // videomux
+    GstElement *videoMux = gst_element_factory_make("mp4mux", NULL);
+    g_object_set(camerabin, "video-muxer", videoMux, NULL);
+
+    // audio source
     GstElement *audioSrc = gst_element_factory_make("pulsesrc", NULL);
     g_object_set(camerabin, "audio-source", audioSrc, NULL);
+
+    // audio encoder
+    // we need to set a capsfilter in order to select the audio config
+    GstElement *audioEncBin = gst_bin_new(NULL);
+    GstElement *audioEnc = gst_element_factory_make("nokiaaacenc", NULL);
+    GstElement *audioCapsFilter = gst_element_factory_make("capsfilter", NULL);
     GstCaps *audioCaps = gst_caps_from_string("audio/x-raw-int, channels=(int)2, width=(int)16, depth=(int)16, rate=(int)48000");
-    g_object_set (camerabin,
-                  "audio-capture-caps",
-                  audioCaps,
-                  NULL);
+    g_object_set(audioCapsFilter, "caps", audioCaps, NULL);
 
+    gst_bin_add_many(GST_BIN(audioEncBin), audioCapsFilter, audioEnc, NULL);
+    gst_element_link(audioCapsFilter, audioEnc);
 
-    // video
-    videoSrc = gst_element_factory_make("subdevsrc2", NULL);
-    g_object_set(videoSrc, "queue-size", 5, NULL);
-    camSrc = gst_element_factory_make("camsrcbin", NULL);
-    g_object_set(camSrc, "video-source", videoSrc, NULL);
-    g_object_set (G_OBJECT (camerabin), "camera-source", camSrc, NULL);
+    GstPad * pad;
+    pad = gst_element_get_static_pad (audioCapsFilter, "sink");
+    gst_element_add_pad (audioEncBin, gst_ghost_pad_new ("sink", pad));
+    gst_object_unref (pad);
+
+    pad = gst_element_get_static_pad (audioEnc, "src");
+    gst_element_add_pad (audioEncBin, gst_ghost_pad_new ("src", pad));
+    gst_object_unref (pad);
+
+    g_object_set(camerabin, "audio-encoder", audioEncBin, NULL);
 
     // viewfinder
     viewfinder = gst_element_factory_make("omapxvsink", NULL);
     g_object_set(viewfinder, "autopaint-colorkey", FALSE, NULL);
     g_object_set (G_OBJECT (camerabin), "viewfinder-sink", viewfinder, NULL);
-
-    // encoder profile
-    // I should remove this and create a profile myself
-    GstEncodingTarget *target =
-        gst_encoding_target_load_from_file("/usr/share/libqcamera/libqcamera.gep", NULL);
-    GstEncodingProfile *profile =
-        gst_encoding_target_get_profile(target, "mpeg4-video");
-    g_object_set(camerabin, "video-profile", profile, (void*) 0);
 
     //error handler
     GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(camerabin));
@@ -107,7 +126,7 @@ Pipeline::~Pipeline()
 
 void Pipeline::setVideoMode()
 {
-    g_object_set(camerabin, "mode", MODE_VIDEO, NULL);
+    g_object_set(camerabin, "mode", 1, NULL);
 
     // set auto scene mode
     gst_photography_set_scene_mode(GST_PHOTOGRAPHY(videoSrc),
@@ -140,16 +159,16 @@ void Pipeline::startRecording()
 {
     // set next file name
     g_object_set(camerabin,
-                 "location",
+                 "filename",
                  nextFileName().toUtf8().constData(),
                  NULL);
 
-    g_signal_emit_by_name(camerabin, "start-capture", 0);
+    g_signal_emit_by_name(camerabin, "capture-start", 0);
 }
 
 void Pipeline::stopRecording()
 {
-    g_signal_emit_by_name(camerabin, "stop-capture", 0);
+    g_signal_emit_by_name(camerabin, "capture-stop", 0);
 }
 
 void Pipeline::setResolution(Resolution value)
@@ -184,24 +203,8 @@ void Pipeline::setResolution(Resolution value)
         return;
     }
 
-    guint32 fcc = GST_MAKE_FOURCC('U', 'Y', 'V', 'Y');
-    GstCaps *caps = 0;
-
-    caps = gst_caps_new_full(gst_structure_new("video/x-raw-yuv",
-                                               "format", GST_TYPE_FOURCC, fcc,
-                                               "width", G_TYPE_INT, width,
-                                               "height", G_TYPE_INT, height,
-                                               "framerate",
-                                                GST_TYPE_FRACTION_RANGE,
-                                                VIDEO_FRN - 1, VIDEO_FRD,
-                                                VIDEO_FRN + 1, VIDEO_FRD,
-                                                (void*) 0),
-                              (void*) 0);
-
-    // set caps to the viewfinder
-    g_object_set(camerabin, "viewfinder-caps", caps, NULL);
-    g_object_set(camerabin, "video-capture-caps", caps, NULL);
-    gst_caps_unref(caps);
+    g_signal_emit_by_name(camerabin, "set-video-resolution-fps",
+                          width, height, VIDEO_FRN, VIDEO_FRD, NULL);
 
     // set new rendering position to the viewfinder
     gst_x_overlay_set_render_rectangle(GST_X_OVERLAY(viewfinder),
@@ -253,25 +256,25 @@ void Pipeline::setVideoEffect(const QString &value)
     qCritical() << "Pipeline: setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
 
     // close valves
-    g_object_set(vfPreValve, "drop", TRUE, NULL);
+    g_object_set(effectPreValve, "drop", TRUE, NULL);
 
     // unlink current effect, remove and destroy it
-    gst_element_unlink_many(vfCapsFilter, vfEffect, vfPostCS, NULL);
-    g_object_ref(vfEffect);
-    gst_bin_remove(GST_BIN(vfEffectBin), vfEffect);
-    gst_element_set_state(vfEffect, GST_STATE_NULL);
-    g_object_unref(GST_OBJECT(vfEffect));
+    gst_element_unlink_many(effectCapsFilter, effect, effectPostCS, NULL);
+    g_object_ref(effect);
+    gst_bin_remove(GST_BIN(effectBin), effect);
+    gst_element_set_state(effect, GST_STATE_NULL);
+    g_object_unref(GST_OBJECT(effect));
 
-    vfEffect = gst_parse_bin_from_description(newEffect->desc().toUtf8(), TRUE, NULL);
+    effect = gst_parse_bin_from_description(newEffect->desc().toUtf8(), TRUE, NULL);
 
     // add new effect to the bin and link it
-    gst_bin_add(GST_BIN(vfEffectBin), vfEffect);
-    gst_element_link_many(vfCapsFilter, vfEffect, vfPostCS, NULL);
+    gst_bin_add(GST_BIN(effectBin), effect);
+    gst_element_link_many(effectCapsFilter, effect, effectPostCS, NULL);
 
-    gst_element_set_state(vfEffect, GST_STATE_PAUSED);
+    gst_element_set_state(effect, GST_STATE_PAUSED);
 
     //open valve
-    g_object_set(vfPreValve, "drop", FALSE, NULL);
+    g_object_set(effectPreValve, "drop", FALSE, NULL);
 }
 
 void Pipeline::setWindowId(int winId)
@@ -369,32 +372,32 @@ QString Pipeline::nextFileName()
 
 void Pipeline::setupEffectBins()
 {
-    vfEffectBin = gst_bin_new(NULL);
-    vfPreValve = gst_element_factory_make("valve", NULL);
-    vfPreCS = gst_element_factory_make("ffmpegcolorspace", NULL);
-    vfPostCS = gst_element_factory_make("ffmpegcolorspace", NULL);
+    effectBin = gst_bin_new(NULL);
+    effectPreValve = gst_element_factory_make("valve", NULL);
+    effectPreCS = gst_element_factory_make("ffmpegcolorspace", NULL);
+    effectPostCS = gst_element_factory_make("ffmpegcolorspace", NULL);
 
     // I need to add this capsfilter because when setting an identity filter,
     // there's some problem negotiating the capabilites and the viewfinder doesn't work
-    vfCapsFilter = gst_element_factory_make("capsfilter", NULL);
+    effectCapsFilter = gst_element_factory_make("capsfilter", NULL);
     GstCaps *caps = gst_caps_from_string("video/x-raw-rgb");
-    g_object_set(vfCapsFilter, "caps", caps, NULL);
+    g_object_set(effectCapsFilter, "caps", caps, NULL);
 
     // This element will contain the effect bin. At this point we set
     // an identity element so no effect is applied
-    vfEffect = gst_element_factory_make("identity", NULL);
+    effect = gst_element_factory_make("identity", NULL);
 
-    gst_bin_add_many(GST_BIN(vfEffectBin), vfPreValve, vfPreCS, vfCapsFilter, vfEffect, vfPostCS, NULL);
-    gst_element_link_many(vfPreValve, vfPreCS, vfCapsFilter, vfEffect, vfPostCS, NULL);
+    gst_bin_add_many(GST_BIN(effectBin), effectPreValve, effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
+    gst_element_link_many(effectPreValve, effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
 
     GstPad *pad;
-    pad = gst_element_get_static_pad(vfPreValve, "sink");
-    gst_element_add_pad(vfEffectBin, gst_ghost_pad_new("sink", pad));
+    pad = gst_element_get_static_pad(effectPreValve, "sink");
+    gst_element_add_pad(effectBin, gst_ghost_pad_new("sink", pad));
     gst_object_unref(GST_OBJECT(pad));
 
-    pad = gst_element_get_static_pad(vfPostCS, "src");
-    gst_element_add_pad(vfEffectBin, gst_ghost_pad_new("src", pad));
+    pad = gst_element_get_static_pad(effectPostCS, "src");
+    gst_element_add_pad(effectBin, gst_ghost_pad_new("src", pad));
     gst_object_unref(GST_OBJECT(pad));
 
-    g_object_set(camerabin, "viewfinder-filter", vfEffectBin, NULL);
+    g_object_set(camerabin, "video-source-filter", effectBin, NULL);
 }
