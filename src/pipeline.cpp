@@ -250,13 +250,13 @@ void Pipeline::setColorFilter(ColorFilter value)
 void Pipeline::setVideoEffect(const QString &value)
 {
     Effect *newEffect = EffectManager::instance()->getEffect(value);
-    qCritical() << "setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
+    qCritical() << "Pipeline: setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
 
     // close valves
     g_object_set(vfPreValve, "drop", TRUE, NULL);
 
     // unlink current effect, remove and destroy it
-    gst_element_unlink_many(vfPreCS, vfEffect, vfPostCS, NULL);
+    gst_element_unlink_many(vfCapsFilter, vfEffect, vfPostCS, NULL);
     g_object_ref(vfEffect);
     gst_bin_remove(GST_BIN(vfEffectBin), vfEffect);
     gst_element_set_state(vfEffect, GST_STATE_NULL);
@@ -266,7 +266,7 @@ void Pipeline::setVideoEffect(const QString &value)
 
     // add new effect to the bin and link it
     gst_bin_add(GST_BIN(vfEffectBin), vfEffect);
-    gst_element_link_many(vfPreCS, vfEffect, vfPostCS, NULL);
+    gst_element_link_many(vfCapsFilter, vfEffect, vfPostCS, NULL);
 
     gst_element_set_state(vfEffect, GST_STATE_PAUSED);
 
@@ -374,12 +374,18 @@ void Pipeline::setupEffectBins()
     vfPreCS = gst_element_factory_make("ffmpegcolorspace", NULL);
     vfPostCS = gst_element_factory_make("ffmpegcolorspace", NULL);
 
+    // I need to add this capsfilter because when setting an identity filter,
+    // there's some problem negotiating the capabilites and the viewfinder doesn't work
+    vfCapsFilter = gst_element_factory_make("capsfilter", NULL);
+    GstCaps *caps = gst_caps_from_string("video/x-raw-rgb");
+    g_object_set(vfCapsFilter, "caps", caps, NULL);
+
     // This element will contain the effect bin. At this point we set
     // an identity element so no effect is applied
     vfEffect = gst_element_factory_make("identity", NULL);
 
-    gst_bin_add_many(GST_BIN(vfEffectBin), vfPreValve, vfPreCS, vfEffect, vfPostCS, NULL);
-    gst_element_link_many(vfPreValve, vfPreCS, vfEffect, vfPostCS, NULL);
+    gst_bin_add_many(GST_BIN(vfEffectBin), vfPreValve, vfPreCS, vfCapsFilter, vfEffect, vfPostCS, NULL);
+    gst_element_link_many(vfPreValve, vfPreCS, vfCapsFilter, vfEffect, vfPostCS, NULL);
 
     GstPad *pad;
     pad = gst_element_get_static_pad(vfPreValve, "sink");

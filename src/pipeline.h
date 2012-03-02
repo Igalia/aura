@@ -60,9 +60,9 @@ class Pipeline : public QObject
 
     GstElement *vfEffectBin;
     GstElement *vfPreValve;
-    GstElement *vfPostValve;
     GstElement *vfEffect;
     GstElement *vfPreCS;
     GstElement *vfPostCS;
+    GstElement *vfCapsFilter;
 };
 #endif

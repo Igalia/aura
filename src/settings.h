@@ -15,7 +15,7 @@
 #define ZOOM_DEFAULT              ZOOM_MIN
 #define VIDEO_RESOLUTION_DEFAULT  Pipeline::Low
 #define COLOR_FILTER_DEFAULT      Pipeline::Normal
-#define VIDEO_EFFECT_DEFAULT      "Waveform"
+#define VIDEO_EFFECT_DEFAULT      "None"
 
 // pixel resolutions in video mode
 #define LOW_RES_WIDTH             320
