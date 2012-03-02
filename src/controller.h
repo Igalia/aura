@@ -23,6 +23,11 @@ class Controller : public QDeclarativeItem
     void setZoom(const double value);
     void setColorFilter(const Pipeline::ColorFilter value);
 
+    Pipeline::Resolution resolution() {return m_currentResolution;};
+    double zoom() {return m_currentZoom;};
+    Pipeline::ColorFilter colorFilter() {return m_currentColorFilter;};
+    QString videoEffect() {return m_currentVideoEffect;};
+
     bool recording() { return m_recording; };
 
 public slots:
