@@ -13,8 +13,8 @@ Rectangle {
     visible: false
 
     property int animationDuration: 150
+    property string selectedEffectName: effectColumn.checkedButton.effectName
 
-    signal effectChanged(string effectName)
 
     function show() {
         visible = true
@@ -55,8 +55,6 @@ Rectangle {
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
-
-            onCheckedButtonChanged: effectChanged(checkedButton.effectName)
 
             Repeater {
                 model: effectManager.effectNames()

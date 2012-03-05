@@ -44,16 +44,25 @@ Item {
         Controller {
             id: controller
             onRecordingChanged: console.debug("recording changed to " + recording)
+            onVideoEffectChanged: console.debug("video effect changed to " + effectName)
+
+            property bool __completed: false
+
+            Component.onCompleted: {
+                __completed = true
+            }
         }
 
         Effects {
             id: effects
             animationDuration: page.animationDuration
+        }
 
-            onEffectChanged: {
-                console.debug("effect changed to " + effectName)
-                controller.setVideoEffect(effectName)
-            }
+        Binding {
+            target: controller
+            property: "videoEffect"
+            value: effects.selectedEffectName
+            when: controller.__completed
         }
 
         ToolIcon {
