@@ -49,7 +49,8 @@ Item {
             property bool __completed: false
 
             Component.onCompleted: {
-                effects.setInitialEffect(videoEffect)
+                console.debug("controller loaded, setting " + videoEffect + " as default to the effects page")
+                effects.initialEffect = videoEffect
                 __completed = true
             }
         }

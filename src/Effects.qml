@@ -13,18 +13,29 @@ Rectangle {
     visible: false
 
     property int animationDuration: 150
-    property string selectedEffectName: effectColumn.checkedButton.effectName
+    property string selectedEffectName: ""
+    property string initialEffect: ""
 
     property variant __effectNames: effectManager.effectNames();
-    property string __initialEffect: ""
 
-    function setInitialEffect(initialEffect) {
-        if (__initialEffect == "") {
-            console.debug("setting initial effect to " + initialEffect)
-            __initialEffect = initialEffect
-            effectColumn.checkedButton = repeater.itemAt(__effectNames.indexOf(initialEffect))
+    states: [
+        State {
+            name: "uninitialized"
+            when: initialEffect == ""
+        },
+        State {
+            name: "initialized"
+            when: initialEffect != ""
+            StateChangeScript {
+                name: "settingButtonColumn"
+                script: {
+                    console.debug("setting initial effect to " + initialEffect)
+                    effectColumn.checkedButton = repeater.itemAt(__effectNames.indexOf(initialEffect))
+                }
+            }
+            PropertyChanges { target: effectsPage; selectedEffectName: effectColumn.checkedButton.effectName }
         }
-    }
+    ]
 
     function show() {
         visible = true
