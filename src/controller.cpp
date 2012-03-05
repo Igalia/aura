@@ -110,6 +110,7 @@ void Controller::setVideoEffect(const QString &value)
         qDebug() << "setting video effect" << value;
         m_currentVideoEffect = value;
         m_pipeline->setVideoEffect(value);
+        emit videoEffectChanged(value);
     }
 }
 

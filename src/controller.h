@@ -14,6 +14,10 @@ class Controller : public QDeclarativeItem
                READ recording
                WRITE setRecording
                NOTIFY recordingChanged)
+    Q_PROPERTY(QString videoEffect
+               READ videoEffect
+               WRITE setVideoEffect
+               NOTIFY videoEffectChanged)
     Controller(QDeclarativeItem *parent = 0);
     ~Controller();
     void setupEffects();
@@ -32,9 +36,11 @@ class Controller : public QDeclarativeItem
 
 public slots:
     void setRecording(bool recording);
+    void setVideoEffect(const QString &value);
 
 signals:
     void recordingChanged(bool recording);
+    void videoEffectChanged(const QString &effectName);
 
  public slots:
     void startPipeline();
@@ -42,7 +48,6 @@ signals:
     void startRecording();
     void stopRecording();
     void shutterClicked();
-    void setVideoEffect(const QString &value);
 
  private slots:
     void resourcesLost();
