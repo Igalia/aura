@@ -15,6 +15,16 @@ Rectangle {
     property int animationDuration: 150
     property string selectedEffectName: effectColumn.checkedButton.effectName
 
+    property variant __effectNames: effectManager.effectNames();
+    property string __initialEffect: ""
+
+    function setInitialEffect(initialEffect) {
+        if (__initialEffect == "") {
+            console.debug("setting initial effect to " + initialEffect)
+            __initialEffect = initialEffect
+            effectColumn.checkedButton = repeater.itemAt(__effectNames.indexOf(initialEffect))
+        }
+    }
 
     function show() {
         visible = true
@@ -57,9 +67,11 @@ Rectangle {
             }
 
             Repeater {
-                model: effectManager.effectNames()
+                id: repeater
+                model: __effectNames.length
+
                 Button {
-                    property string effectName: modelData
+                    property string effectName: __effectNames[index]
                     text: effectName
                 }
             }

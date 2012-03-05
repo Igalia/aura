@@ -49,6 +49,7 @@ Item {
             property bool __completed: false
 
             Component.onCompleted: {
+                effects.setInitialEffect(videoEffect)
                 __completed = true
             }
         }
