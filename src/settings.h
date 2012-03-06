@@ -39,7 +39,7 @@
 // user configurable parameters
 #define ZOOM_DEFAULT              ZOOM_MIN
 #define VIDEO_RESOLUTION_DEFAULT  Pipeline::Low
-#define COLOR_FILTER_DEFAULT      Pipeline::Normal
+#define COLOR_FILTER_DEFAULT      ControllerSettings::Normal
 #define VIDEO_EFFECT_DEFAULT      "None"
 
 // pixel resolutions in video mode

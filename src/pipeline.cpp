@@ -264,27 +264,27 @@ void Pipeline::setZoom(double value)
     g_object_set (camerabin, "zoom", value, NULL);
 }
 
-void Pipeline::setColorFilter(ColorFilter value)
+void Pipeline::setColorFilter(ControllerSettings::ColorFilter value)
 {
     GstColourToneMode mode;
 
     switch (value) {
-    case Normal:
+    case ControllerSettings::Normal:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NORMAL;
         break;
-    case Grayscale:
+    case ControllerSettings::Grayscale:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_GRAYSCALE;
         break;
-    case Sepia:
+    case ControllerSettings::Sepia:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SEPIA;
         break;
-    case Vivid:
+    case ControllerSettings::Vivid:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_VIVID;
         break;
-    case Negative:
+    case ControllerSettings::Negative:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NEGATIVE;
         break;
-    case Solarize:
+    case ControllerSettings::Solarize:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SOLARIZE;
         break;
     default:

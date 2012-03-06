@@ -121,7 +121,7 @@ void Controller::setZoom(double value)
     }
 }
 
-void Controller::setColorFilter(Pipeline::ColorFilter value)
+void Controller::setColorFilter(ControllerSettings::ColorFilter value)
 {
     if (m_currentColorFilter != value) {
         m_currentColorFilter = value;
