@@ -126,6 +126,7 @@ void Controller::setColorFilter(ControllerSettings::ColorFilter value)
     if (m_currentColorFilter != value) {
         m_currentColorFilter = value;
         m_pipeline->setColorFilter(value);
+        emit colorFilterChanged(value);
     }
 }
 

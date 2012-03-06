@@ -43,6 +43,10 @@ class Controller : public QDeclarativeItem
                READ videoEffect
                WRITE setVideoEffect
                NOTIFY videoEffectChanged)
+    Q_PROPERTY(ControllerSettings::ColorFilter colorFilter
+               READ colorFilter
+               WRITE setColorFilter
+               NOTIFY colorFilterChanged)
     Controller(QDeclarativeItem *parent = 0);
     ~Controller();
     void setupEffects();
@@ -50,7 +54,6 @@ class Controller : public QDeclarativeItem
     // user to set user defined values
     void setResolution(const Pipeline::Resolution value);
     void setZoom(const double value);
-    void setColorFilter(const ControllerSettings::ColorFilter value);
 
     Pipeline::Resolution resolution() {return m_currentResolution;};
     double zoom() {return m_currentZoom;};
@@ -62,10 +65,12 @@ class Controller : public QDeclarativeItem
 public slots:
     void setRecording(bool recording);
     void setVideoEffect(const QString &value);
+    void setColorFilter(const ControllerSettings::ColorFilter value);
 
 signals:
     void recordingChanged(bool recording);
     void videoEffectChanged(const QString &effectName);
+    void colorFilterChanged(const ControllerSettings::ColorFilter value);
 
  public slots:
     void startPipeline();
