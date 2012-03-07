@@ -63,7 +63,7 @@ Pipeline::Pipeline(QObject *parent)
       videoSrc(0),
       viewfinder(0),
       effectBin(0),
-      effectPreValve(0),
+      effectValve(0),
       effect(0),
       effectPreCS(0),
       effectPostCS(0),
@@ -134,10 +134,7 @@ Pipeline::Pipeline(QObject *parent)
     setVideoMode();
     setupFileStorage();
     setupEffectBins();
-    setZoom(ZOOM_DEFAULT);
     setResolution(VIDEO_RESOLUTION_DEFAULT);
-    setColorFilter(COLOR_FILTER_DEFAULT);
-    setVideoEffect(VIDEO_EFFECT_DEFAULT);
 }
 
 Pipeline::~Pipeline()
@@ -277,25 +274,27 @@ void Pipeline::setVideoEffect(const QString &value)
     qCritical() << "Pipeline: setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
 
     // close valves
-    g_object_set(effectPreValve, "drop", TRUE, NULL);
+    g_object_set(effectValve, "drop", TRUE, NULL);
 
     // unlink current effect, remove and destroy it
     gst_element_unlink_many(effectCapsFilter, effect, effectPostCS, NULL);
     g_object_ref(effect);
-    gst_bin_remove(GST_BIN(effectBin), effect);
+    gst_bin_remove(GST_BIN(effectInternalBin), effect);
     gst_element_set_state(effect, GST_STATE_NULL);
     g_object_unref(GST_OBJECT(effect));
 
     effect = gst_parse_bin_from_description(newEffect->desc().toUtf8(), TRUE, NULL);
 
     // add new effect to the bin and link it
-    gst_bin_add(GST_BIN(effectBin), effect);
+    gst_bin_add(GST_BIN(effectInternalBin), effect);
     gst_element_link_many(effectCapsFilter, effect, effectPostCS, NULL);
 
-    gst_element_set_state(effect, GST_STATE_PAUSED);
+    gst_element_set_state(effectInternalBin, GST_STATE_READY);
+    gst_element_set_state(effectInternalBin, GST_STATE_PAUSED);
 
     //open valve
-    g_object_set(effectPreValve, "drop", FALSE, NULL);
+    g_object_set(effectValve, "drop", FALSE, NULL);
+
 }
 
 void Pipeline::setWindowId(int winId)
@@ -398,30 +397,43 @@ QString Pipeline::nextFileName()
 
 void Pipeline::setupEffectBins()
 {
-    effectBin = gst_bin_new(NULL);
-    effectPreValve = gst_element_factory_make("valve", NULL);
+    GstCaps *caps;
+    GstPad *pad;
+
+    // internal bin and elements
+    effectInternalBin = gst_bin_new(NULL);
     effectPreCS = gst_element_factory_make("ffmpegcolorspace", NULL);
     effectPostCS = gst_element_factory_make("ffmpegcolorspace", NULL);
-
-    // I need to add this capsfilter because when setting an identity filter,
-    // there's some problem negotiating the capabilites and the viewfinder doesn't work
-    effectCapsFilter = gst_element_factory_make("capsfilter", NULL);
-    GstCaps *caps = gst_caps_from_string("video/x-raw-rgb");
-    g_object_set(effectCapsFilter, "caps", caps, NULL);
-
-    // This element will contain the effect bin. At this point we set
-    // an identity element so no effect is applied
     effect = gst_element_factory_make("identity", NULL);
 
-    gst_bin_add_many(GST_BIN(effectBin), effectPreValve, effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
-    gst_element_link_many(effectPreValve, effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
+    // capsfilter used to force rgb in the effect pipeline
+    effectCapsFilter = gst_element_factory_make("capsfilter", NULL);
+    caps = gst_caps_from_string("video/x-raw-rgb");
+    g_object_set(effectCapsFilter, "caps", caps, NULL);
 
-    GstPad *pad;
-    pad = gst_element_get_static_pad(effectPreValve, "sink");
-    gst_element_add_pad(effectBin, gst_ghost_pad_new("sink", pad));
+    gst_bin_add_many(GST_BIN(effectInternalBin), effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
+    gst_element_link_many(effectPreCS, effectCapsFilter, effect, effectPostCS, NULL);
+
+    // ghost pads to the internal bin
+    pad = gst_element_get_static_pad(effectPreCS, "sink");
+    gst_element_add_pad(effectInternalBin, gst_ghost_pad_new("sink", pad));
+    gst_object_unref(GST_OBJECT(pad));
+    pad = gst_element_get_static_pad(effectPostCS, "src");
+    gst_element_add_pad(effectInternalBin, gst_ghost_pad_new("src", pad));
     gst_object_unref(GST_OBJECT(pad));
 
-    pad = gst_element_get_static_pad(effectPostCS, "src");
+    // main bin and valve
+    effectBin = gst_bin_new(NULL);
+    effectValve = gst_element_factory_make("valve", NULL);
+
+    gst_bin_add_many(GST_BIN(effectBin), effectValve, effectInternalBin, NULL);
+    gst_element_link(effectValve, effectInternalBin);
+
+    // ghost pads to the main bin
+    pad = gst_element_get_static_pad(effectValve, "sink");
+    gst_element_add_pad(effectBin, gst_ghost_pad_new("sink", pad));
+    gst_object_unref(GST_OBJECT(pad));
+    pad = gst_element_get_static_pad(effectInternalBin, "src");
     gst_element_add_pad(effectBin, gst_ghost_pad_new("src", pad));
     gst_object_unref(GST_OBJECT(pad));
 

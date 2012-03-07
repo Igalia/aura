@@ -58,7 +58,8 @@ class Pipeline : public QObject
     GstElement *viewfinder;
 
     GstElement *effectBin;
-    GstElement *effectPreValve;
+    GstElement *effectValve;
+    GstElement *effectInternalBin;
     GstElement *effect;
     GstElement *effectPreCS;
     GstElement *effectPostCS;
