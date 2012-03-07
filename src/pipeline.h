@@ -63,5 +63,7 @@ class Pipeline : public QObject
     GstElement *effectPreCS;
     GstElement *effectPostCS;
     GstElement *effectCapsFilter;
+
+    int windowId;
 };
 #endif

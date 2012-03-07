@@ -12,6 +12,25 @@
 #include <gst/basecamerabinsrc/gstcamerabin-enum.h>
 
 
+static GstBusSyncReply
+busSyncHandler(GstBus *bus, GstMessage *message, gpointer data)
+{
+    Q_UNUSED(bus);
+
+    // ignore anything but 'prepare-xwindow-id' element messages
+    if (GST_MESSAGE_TYPE (message) != GST_MESSAGE_ELEMENT)
+        return GST_BUS_PASS;
+
+    if (!gst_structure_has_name (message->structure, "prepare-xwindow-id"))
+        return GST_BUS_PASS;
+
+    static_cast<Pipeline*>(data)->handleBusMessage(message);
+
+    gst_message_unref (message);
+
+    return GST_BUS_DROP;
+}
+
 gboolean gStreamerMessageWatcher(GstBus *bus,
                                  GstMessage *message,
                                  gpointer data)
@@ -48,7 +67,8 @@ Pipeline::Pipeline(QObject *parent)
       effect(0),
       effectPreCS(0),
       effectPostCS(0),
-      effectCapsFilter(0)
+      effectCapsFilter(0),
+      windowId(0)
 {
     // camerabin
     camerabin = gst_element_factory_make("camerabin", NULL);
@@ -101,6 +121,7 @@ Pipeline::Pipeline(QObject *parent)
     //error handler
     GstBus *bus = gst_pipeline_get_bus(GST_PIPELINE(camerabin));
     gst_bus_add_watch(bus, gStreamerMessageWatcher, this);
+    gst_bus_set_sync_handler(bus, (GstBusSyncHandler) busSyncHandler, this);
     gst_object_unref(bus);
 
     // idle handler
@@ -279,7 +300,7 @@ void Pipeline::setVideoEffect(const QString &value)
 
 void Pipeline::setWindowId(int winId)
 {
-    gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(viewfinder), winId);
+    windowId = winId;
 }
 
 void Pipeline::handleBusMessage(GstMessage *message)
@@ -287,6 +308,11 @@ void Pipeline::handleBusMessage(GstMessage *message)
     switch (GST_MESSAGE_TYPE(message)) {
     case GST_MESSAGE_ELEMENT:
         {
+            // The only message we are handling here is the prepare-xwindow-id one
+            if (gst_structure_has_name (message->structure, "prepare-xwindow-id")) {
+                qCritical() << "Setting xwindow_id to " << windowId;
+                gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(viewfinder), windowId);
+            }
             break;
         }
     case GST_MESSAGE_ERROR:
