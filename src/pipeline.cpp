@@ -11,7 +11,6 @@
 #include <gst/pbutils/encoding-target.h>
 #include <gst/basecamerabinsrc/gstcamerabin-enum.h>
 
-
 static GstBusSyncReply
 busSyncHandler(GstBus *bus, GstMessage *message, gpointer data)
 {
@@ -180,6 +179,9 @@ void Pipeline::startRecording()
                  "filename",
                  nextFileName().toUtf8().constData(),
                  NULL);
+
+    // write video metadata
+    writeMetadata();
 
     g_signal_emit_by_name(camerabin, "capture-start", 0);
 }
@@ -438,4 +440,25 @@ void Pipeline::setupEffectBins()
     gst_object_unref(GST_OBJECT(pad));
 
     g_object_set(camerabin, "video-source-filter", effectBin, NULL);
+}
+
+void Pipeline::writeMetadata()
+{
+    // To make the video appear in gallery, we need to set the
+    // manufacturer and model tags
+
+    qCritical() << "manufacturer " << systemInfo.manufacturer().toUtf8().constData()
+                << " model " << systemInfo.model().toUtf8().constData();
+
+    gst_tag_setter_add_tags(GST_TAG_SETTER(camerabin),
+                            GST_TAG_MERGE_REPLACE,
+                            GST_TAG_DEVICE_MANUFACTURER,
+                            systemInfo.manufacturer().toUtf8().constData(),
+                            NULL);
+
+    gst_tag_setter_add_tags(GST_TAG_SETTER(camerabin),
+                            GST_TAG_MERGE_REPLACE,
+                            GST_TAG_DEVICE_MODEL,
+                            systemInfo.model().toUtf8().constData(),
+                            NULL);
 }

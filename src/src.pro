@@ -2,9 +2,10 @@ TEMPLATE = app
 TARGET = "aura"
 
 QT += declarative
-CONFIG += meegotouch link_pkgconfig
+CONFIG += meegotouch link_pkgconfig mobility
 PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1 gstreamer-plugins-bad-0.10 \
              gstreamer-pbutils-0.10 gstreamer-interfaces-0.10
+MOBILITY += systeminfo
 
 QMAKE_CXXFLAGS_RELEASE += -Werror
 QMAKE_CXXFLAGS_DEBUG += -g -O0 -Werror

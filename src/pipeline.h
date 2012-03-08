@@ -2,11 +2,14 @@
 #define PIPELINE_H
 
 #include <QObject>
+#include <QSystemDeviceInfo>
 #include "settings.h"
 #include "gst/gst.h"
 #include <gst/interfaces/photography.h>
 #include <gst/interfaces/xoverlay.h>
 #include <gst/video/video.h>
+
+QTM_USE_NAMESPACE
 
 class Pipeline : public QObject
 {
@@ -52,6 +55,7 @@ class Pipeline : public QObject
  private:
     QString nextFileName();
     void setupEffectBins();
+    void writeMetadata();
 
     GstElement *camerabin;
     GstElement *videoSrc;
@@ -66,5 +70,6 @@ class Pipeline : public QObject
     GstElement *effectCapsFilter;
 
     int windowId;
+    QSystemDeviceInfo systemInfo;
 };
 #endif
