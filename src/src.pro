@@ -15,14 +15,12 @@ HEADERS += settings.h       \
            controller.h     \
            effect.h         \
            effectmanager.h  \
-           debugutils.h     \
            resourcemanager.h \
            pipeline.h       \
 
 SOURCES += controller.cpp   \
            effect.cpp       \
            effectmanager.cpp \
-           debugutils.c     \
            resourcemanager.cpp \
            pipeline.cpp     \
            main.cpp         \
