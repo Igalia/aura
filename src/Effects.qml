@@ -41,21 +41,21 @@ Rectangle {
     property string selectedEffectName: ""
     property string initialEffect: ""
 
-    property variant __effectNames: effectManager.effectNames();
+    property variant effectNames: []
 
     states: [
         State {
             name: "uninitialized"
-            when: initialEffect == ""
+            when: initialEffect == "" || effectNames.length == 0
         },
         State {
             name: "initialized"
-            when: initialEffect != ""
+            when: initialEffect != "" && effectNames.length > 0
             StateChangeScript {
                 name: "settingButtonColumn"
                 script: {
                     console.debug("setting initial effect to " + initialEffect)
-                    effectColumn.checkedButton = repeater.itemAt(__effectNames.indexOf(initialEffect))
+                    effectColumn.checkedButton = repeater.itemAt(effectNames.indexOf(initialEffect))
                 }
             }
             PropertyChanges { target: effectsPage; selectedEffectName: effectColumn.checkedButton.effectName }
@@ -104,10 +104,10 @@ Rectangle {
 
             Repeater {
                 id: repeater
-                model: __effectNames.length
+                model: effectNames.length
 
                 Button {
-                    property string effectName: __effectNames[index]
+                    property string effectName: effectNames[index]
                     text: effectName
                 }
             }

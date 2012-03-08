@@ -83,6 +83,7 @@ Item {
         Effects {
             id: effects
             animationDuration: page.animationDuration
+            effectNames: effectManager.effectNames()
         }
 
         Binding {
