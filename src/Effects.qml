@@ -39,6 +39,7 @@ Rectangle {
 
     property int animationDuration: 150
     property string selectedEffectName: ""
+    property int selectedEffectIndex
     property string initialEffect: ""
 
     property variant effectNames: []
@@ -59,6 +60,7 @@ Rectangle {
                 }
             }
             PropertyChanges { target: effectsPage; selectedEffectName: effectColumn.checkedButton.effectName }
+            PropertyChanges { target: effectsPage; selectedEffectIndex: effectColumn.checkedButton.effectIndex }
         }
     ]
 
@@ -107,6 +109,7 @@ Rectangle {
                 model: effectNames.length
 
                 Button {
+                    property int effectIndex: index
                     property string effectName: effectNames[index]
                     text: effectName
                 }
