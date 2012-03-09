@@ -41,6 +41,7 @@ Item {
 
     property bool windowActive : platformWindow.active
     property int animationDuration: 150
+    property bool __dialogsVisible: effects.visible || colorFilters.visible
 
     Item {
         id: mainPage
@@ -76,6 +77,7 @@ Item {
             Component.onCompleted: {
                 console.debug("controller loaded, setting " + videoEffect + " as default to the effects page")
                 effects.initialEffect = videoEffect
+                colorFilters.initialEffect = colorFilters.effectNames[colorFilter]
                 __completed = true
             }
         }
@@ -93,6 +95,19 @@ Item {
             when: controller.__completed
         }
 
+        Effects {
+            id: colorFilters
+            animationDuration: page.animationDuration
+            effectNames: [ "Normal", "Grayscale", "Sepia", "Vivid", "Negative", "Solarize" ]
+        }
+
+        Binding {
+            target: controller
+            property: "colorFilter"
+            value: colorFilters.selectedEffectIndex
+            when: controller.__completed
+        }
+
         ToolIcon {
             id: shutter
             anchors {
@@ -100,7 +115,7 @@ Item {
                 verticalCenter: parent.verticalCenter
             }
             iconId: "camera-shutter"
-            opacity: effects.visible ? 0 : 1
+            opacity: __dialogsVisible ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: {
@@ -110,13 +125,26 @@ Item {
         }
 
         ToolIcon {
-            id: conf
+            id: colorFilterConf
+            anchors {
+                right: parent.right
+                bottom: filtersConf.top
+            }
+            iconId: "camera-filter-solarize-screen"
+            opacity: __dialogsVisible || controller.recording ? 0 : 1
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: animationDuration } }
+            onClicked: colorFilters.show()
+        }
+
+        ToolIcon {
+            id: filtersConf
             anchors {
                 right: parent.right
                 bottom: parent.bottom
             }
             iconId: "toolbar-view-menu"
-            opacity: effects.visible || controller.recording ? 0 : 1
+            opacity: __dialogsVisible || controller.recording ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: effects.show()
