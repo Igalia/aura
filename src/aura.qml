@@ -143,7 +143,7 @@ Item {
                 right: parent.right
                 bottom: parent.bottom
             }
-            iconId: "toolbar-view-menu"
+            iconId: "camera-high-contrast"
             opacity: __dialogsVisible || controller.recording ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
