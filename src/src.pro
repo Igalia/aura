@@ -13,6 +13,7 @@ QMAKE_CXXFLAGS_DEBUG += -g -O0 -Werror
 # Input
 HEADERS += settings.h       \
            controller.h     \
+           controller-settings.h \
            effect.h         \
            effectmanager.h  \
            resourcemanager.h \

@@ -32,7 +32,6 @@
 #include "controller.h"
 #include "effectmanager.h"
 #include "common.h"
-#include "pipeline.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,11 +41,11 @@ int main(int argc, char *argv[])
 
     QDeclarativeView view;
     qmlRegisterType<Controller>("aura.controller", 1, 0, "Controller");
-    qmlRegisterUncreatableType<Pipeline::ColorFilter>("aura.pipeline."
-                                                      "colorfilters", 1, 0,
-                                                      "ColorFilter",
-                                                      "Exporting ColorFilter "
-                                                      "settings to QML");
+    qmlRegisterUncreatableType<ControllerSettings>("aura.controller.settings",
+                                                   1, 0, "ControllerSettings",
+                                                   "Exporting "
+                                                   "ControllerSettings "
+                                                   "settings to QML");
     QDeclarativeContext *context = view.rootContext();
     EffectManager::setup();
     context->setContextProperty("effectManager", EffectManager::instance());
