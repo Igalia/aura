@@ -114,7 +114,7 @@ Item {
                 right: parent.right
                 verticalCenter: parent.verticalCenter
             }
-            iconId: "camera-shutter"
+            iconId: controller.recording ? "camera-ongoing-recording" : "camera-shutter"
             opacity: __dialogsVisible ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
