@@ -34,7 +34,6 @@
 
 #include <gst/pbutils/encoding-profile.h>
 #include <gst/pbutils/encoding-target.h>
-#include <gst/basecamerabinsrc/gstcamerabin-enum.h>
 
 static GstBusSyncReply
 busSyncHandler(GstBus *bus, GstMessage *message, gpointer data)
