@@ -33,6 +33,7 @@
 #include "controller.h"
 #include "effectmanager.h"
 #include "common.h"
+#include "postcapture.h"
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -42,6 +43,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     QDeclarativeView view;
     qmlRegisterType<Controller>("aura.controller", 1, 0, "Controller");
+    qmlRegisterType<PostCapture>("aura.postcapture", 1, 0, "PostCapture");
     qmlRegisterUncreatableType<ControllerSettings>("aura.controller.settings",
                                                    1, 0, "ControllerSettings",
                                                    "Exporting "

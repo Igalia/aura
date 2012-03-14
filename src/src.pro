@@ -18,6 +18,7 @@ HEADERS += settings.h       \
            effectmanager.h  \
            resourcemanager.h \
            pipeline.h       \
+           postcapture.h
 
 SOURCES += controller.cpp   \
            effect.cpp       \
@@ -25,6 +26,7 @@ SOURCES += controller.cpp   \
            resourcemanager.cpp \
            pipeline.cpp     \
            main.cpp         \
+           postcapture.cpp
 #FORMS#
 
   unix {
