@@ -20,8 +20,11 @@ unix {
   effects.path = $$DATADIR/gnome-video-effects
   effects.files = effects/*.effect
 
-  icon64.files = icon64/aura.png
+  icon64.files = data/icon64/aura.png
   icon64.path = $$DATADIR/icons/hicolor/64x64/apps
 
-  INSTALLS += effects icon64
+  splash.files = data/splash/aura-splash.jpg
+  splash.path = $$DATADIR/aura
+
+  INSTALLS += effects icon64 splash
 }

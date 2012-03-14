@@ -196,6 +196,11 @@ void Pipeline::stop()
     gst_element_set_state(camerabin, GST_STATE_PAUSED);
 }
 
+void Pipeline::prepare()
+{
+    gst_element_set_state(camerabin, GST_STATE_READY);
+}
+
 void Pipeline::startRecording()
 {
     // set next file name

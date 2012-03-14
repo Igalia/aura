@@ -59,6 +59,7 @@ class Pipeline : public QObject
     void setVideoEffect(const QString &value);
     void start();
     void stop();
+    void prepare();
     void startRecording();
     void stopRecording();
     void setWindowId(int winId);

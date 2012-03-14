@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = "aura"
 
 QT += declarative
-CONFIG += meegotouch link_pkgconfig mobility
+CONFIG += meegotouch link_pkgconfig mobility qdeclarative-boostable
 PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1 gstreamer-plugins-bad-0.10 \
              gstreamer-pbutils-0.10 gstreamer-interfaces-0.10
 MOBILITY += systeminfo

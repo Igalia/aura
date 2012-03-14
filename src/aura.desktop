@@ -4,7 +4,7 @@ Version=0.1
 Name=Aura
 GenericName=Aura
 Comment=Aura
-Exec=/usr/bin/single-instance /usr/bin/aura
+Exec=/usr/bin/invoker --single-instance --splash /usr/share/aura/aura-splash.jpg --type=d /usr/bin/aura
 Terminal=false
 Type=Application
 Icon=/usr/share/icons/hicolor/64x64/apps/aura.png

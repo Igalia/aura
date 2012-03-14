@@ -42,10 +42,12 @@ Controller::Controller(QDeclarativeItem *parent)
       m_currentVideoEffect(VIDEO_EFFECT_DEFAULT)
 {
     setupEffects();
-    m_pipeline = new Pipeline();
 
     connect(ResourceManager::instance(), SIGNAL(resourcesLost()), this, SLOT(resourcesLost()));
+
+    m_pipeline = new Pipeline();
     connect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
+    m_pipeline->prepare();
 }
 
 Controller::~Controller()

@@ -26,6 +26,7 @@
 #include <QDeclarativeView>
 #include <QApplication>
 #include <QtDeclarative>
+#include <QtCore/QtGlobal>
 
 #include <gst/gst.h>
 
@@ -33,7 +34,7 @@
 #include "effectmanager.h"
 #include "common.h"
 
-int main(int argc, char *argv[])
+Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     gst_init(&argc, &argv);
 
