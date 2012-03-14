@@ -40,4 +40,20 @@ PostCapture::~PostCapture()
 void PostCapture::show()
 {
     qDebug() << Q_FUNC_INFO;
+
+    QDBusMessage message =
+        QDBusMessage::createMethodCall("com.nokia.Gallery",
+                                       "/com/nokia/maemo/meegotouch/"
+                                       "GalleryInterface",
+                                       "com.nokia.maemo.meegotouch."
+                                       "GalleryInterface",
+                                       "showCameraRoll");
+
+    QDBusConnection bus = QDBusConnection::sessionBus();
+
+    if (bus.isConnected()) {
+            bus.send(message);
+    } else {
+        qCritical() << "Could not connect to dbus!";
+    }
 }
