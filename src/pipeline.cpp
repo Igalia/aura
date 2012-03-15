@@ -203,10 +203,13 @@ void Pipeline::prepare()
 
 void Pipeline::startRecording()
 {
+    currentFile = nextFileName();
+    emit savedFileNameChanged(currentFile);
+
     // set next file name
     g_object_set(camerabin,
                  "filename",
-                 nextFileName().toUtf8().constData(),
+                 currentFile.toUtf8().constData(),
                  NULL);
 
     // write video metadata

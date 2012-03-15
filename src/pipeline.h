@@ -42,6 +42,11 @@ class Pipeline : public QObject
     Q_OBJECT
 
  public:
+
+    Q_PROPERTY(QString savedFileName
+               READ savedFileName
+               NOTIFY savedFileNameChanged)
+
     // resolution values
     typedef enum {
         Low = 0,
@@ -65,9 +70,11 @@ class Pipeline : public QObject
     void setWindowId(int winId);
     void handleBusMessage(GstMessage *message);
     bool isIdle();
+    QString savedFileName() { return currentFile; };
 
  signals:
     void idleChanged(bool isIdle);
+    void savedFileNameChanged(const QString &filename);
 
  private:
     QString nextFileName();
@@ -88,5 +95,6 @@ class Pipeline : public QObject
 
     int windowId;
     QSystemDeviceInfo systemInfo;
+    QString currentFile;
 };
 #endif
