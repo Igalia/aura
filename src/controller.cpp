@@ -47,6 +47,8 @@ Controller::Controller(QDeclarativeItem *parent)
 
     m_pipeline = new Pipeline();
     connect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
+    connect(m_pipeline, SIGNAL(savedFileNameChanged(const QString &)),
+            this, SIGNAL(savedFileNameChanged(const QString &)));
     m_pipeline->prepare();
 }
 
@@ -166,4 +168,9 @@ void Controller::idleChanged(bool isIdle)
     } else {
         qCritical() << "Controller: recording has stopped";
     }
+}
+
+QString Controller::savedFileName()
+{
+    return m_pipeline->savedFileName();
 }

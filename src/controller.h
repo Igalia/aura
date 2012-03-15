@@ -47,6 +47,9 @@ class Controller : public QDeclarativeItem
                READ colorFilter
                WRITE setColorFilter
                NOTIFY colorFilterChanged)
+    Q_PROPERTY(QString savedFileName
+               READ savedFileName
+               NOTIFY savedFileNameChanged)
     Controller(QDeclarativeItem *parent = 0);
     ~Controller();
     void setupEffects();
@@ -61,6 +64,7 @@ class Controller : public QDeclarativeItem
     QString videoEffect() {return m_currentVideoEffect;};
 
     bool recording() { return m_recording; };
+    QString savedFileName();
 
 public slots:
     void setRecording(bool recording);
@@ -71,6 +75,7 @@ signals:
     void recordingChanged(bool recording);
     void videoEffectChanged(const QString &effectName);
     void colorFilterChanged(const ControllerSettings::ColorFilter value);
+    void savedFileNameChanged(const QString &filename);
 
  public slots:
     void startPipeline();
