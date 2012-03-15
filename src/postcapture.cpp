@@ -26,11 +26,20 @@
 #include <QDBusMessage>
 #include <QDBusConnection>
 
+#include "common.h"
 #include "postcapture.h"
 
 PostCapture::PostCapture(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
 {
+    QDeclarativeComponent
+        component(&m_engine, QUrl::fromLocalFile(QML_PATH "PostCapture.qml"));
+    QDeclarativeItem *item =
+        dynamic_cast<QDeclarativeItem *>(component.create());
+    item->setParentItem(this);
+    this->setProperty("implicitWidth", item->property("width").toReal());
+    this->setProperty("implicitHeight", item->property("height").toReal());
+    connect(item, SIGNAL(clicked()), this, SLOT(show()));
 }
 
 PostCapture::~PostCapture()

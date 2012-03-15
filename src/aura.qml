@@ -153,19 +153,13 @@ Item {
 
         PostCapture {
             id: postCapture
-        }
-
-        ToolIcon {
-            id: postCaptureButton
             anchors {
                 left: parent.left
                 bottom: parent.bottom
             }
-            iconId: "toolbar-gallery"
             opacity: __dialogsVisible || controller.recording ? 0 : 1
             visible: opacity > 0
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
-            onClicked: postCapture.show()
         }
 
         Item {

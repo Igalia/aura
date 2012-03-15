@@ -23,25 +23,12 @@
  *
  */
 
-#ifndef POSTCAPTURE_H
-#define POSTCAPTURE_H
+import QtQuick 1.1
+import com.nokia.meego 1.0
+import com.nokia.extras 1.0
+import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
+import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasConstants
 
-#include <QObject>
-#include <QDeclarativeItem>
-#include <QDeclarativeEngine>
-
-class PostCapture : public QDeclarativeItem
-{
-    Q_OBJECT
-
- public:
-    PostCapture(QDeclarativeItem *parent = 0);
-    ~PostCapture();
-
- private slots:
-    void show();
-
- private:
-    QDeclarativeEngine m_engine;
-};
-#endif
+ToolIcon {
+    iconId: "toolbar-gallery"
+}
