@@ -64,5 +64,12 @@ void PostCapture::show()
             bus.send(message);
     } else {
         qCritical() << "Could not connect to dbus!";
+}
+
+void PostCapture::setFile(const QString &file)
+{
+    if (file != m_file) {
+        m_file = file;
+        emit fileChanged(file);
     }
 }

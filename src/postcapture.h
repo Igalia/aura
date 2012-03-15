@@ -34,14 +34,27 @@ class PostCapture : public QDeclarativeItem
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString file
+               READ file
+               WRITE setFile
+               NOTIFY fileChanged)
+
  public:
     PostCapture(QDeclarativeItem *parent = 0);
     ~PostCapture();
+    QString file() { return m_file; };
+
+ public slots:
+    void setFile(const QString &file);
+
+ signals:
+    void fileChanged(const QString &file);
 
  private slots:
     void show();
 
  private:
     QDeclarativeEngine m_engine;
+    QString m_file;
 };
 #endif
