@@ -158,7 +158,8 @@ Item {
                 bottom: parent.bottom
             }
             opacity: __dialogsVisible || controller.recording ? 0 : 1
-            visible: opacity > 0 && file != ""
+            visible: opacity > 0 && file != "" && !controller.recording
+            enabled: visible
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
             onClicked: controller.stopPipeline()
         }
