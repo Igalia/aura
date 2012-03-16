@@ -160,6 +160,7 @@ Item {
             opacity: __dialogsVisible || controller.recording ? 0 : 1
             visible: opacity > 0 && file != ""
             Behavior on opacity { NumberAnimation { duration: animationDuration } }
+            onClicked: controller.stopPipeline()
         }
 
         Binding {

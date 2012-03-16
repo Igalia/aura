@@ -49,6 +49,7 @@ class PostCapture : public QDeclarativeItem
 
  signals:
     void fileChanged(const QString &file);
+    void clicked();
 
  private slots:
     void show();

@@ -51,6 +51,8 @@ PostCapture::~PostCapture()
 
 void PostCapture::show()
 {
+    emit clicked();
+
     if (m_file.isEmpty()) {
         qWarning() << "empty file to show";
         return;
