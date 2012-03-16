@@ -1,0 +1,7 @@
+These effect definitions were taking from the GNOME Video Effects
+[1]. We removed the ones that did not work properly and added the
+"None" effect.
+
+We specially thank the GNOME Video Effects team.
+
+[1] http://live.gnome.org/GnomeVideoEffects
