@@ -25,9 +25,12 @@
 
 #include <QDBusMessage>
 #include <QDBusConnection>
+#include <contentaction.h>
 
 #include "common.h"
 #include "postcapture.h"
+
+using ContentAction::Action;
 
 PostCapture::PostCapture(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
@@ -48,22 +51,22 @@ PostCapture::~PostCapture()
 
 void PostCapture::show()
 {
-    qDebug() << Q_FUNC_INFO;
+    if (m_file.isEmpty()) {
+        qWarning() << "empty file to show";
+        return;
+    }
 
-    QDBusMessage message =
-        QDBusMessage::createMethodCall("com.nokia.Gallery",
-                                       "/com/nokia/maemo/meegotouch/"
-                                       "GalleryInterface",
-                                       "com.nokia.maemo.meegotouch."
-                                       "GalleryInterface",
-                                       "showCameraRoll");
+    QString uri = m_file;
+    uri.prepend("file://");
+    qDebug() << Q_FUNC_INFO << uri;
 
-    QDBusConnection bus = QDBusConnection::sessionBus();
-
-    if (bus.isConnected()) {
-            bus.send(message);
+    Action action = Action::defaultActionForFile(uri, "x-maemo-nepomuk/device-captured-video");
+    if (action.isValid()) {
+        qDebug() << Q_FUNC_INFO << "chosen action:" << action.name();
+        action.triggerAndWait();
     } else {
-        qCritical() << "Could not connect to dbus!";
+        qWarning() << "could not file action for" << m_file;
+    }
 }
 
 void PostCapture::setFile(const QString &file)
