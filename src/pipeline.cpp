@@ -193,7 +193,7 @@ void Pipeline::start()
 
 void Pipeline::stop()
 {
-    gst_element_set_state(camerabin, GST_STATE_PAUSED);
+    gst_element_set_state(camerabin, GST_STATE_NULL);
 }
 
 void Pipeline::prepare()
