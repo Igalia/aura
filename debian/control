@@ -2,12 +2,12 @@ Source: aura
 Section: user/Other
 Priority: extra
 Maintainer: Xabier Rodriguez Calvar <calvaris@igalia.com>
-Build-Depends: debhelper (>= 7), applauncherd-dev
+Build-Depends: debhelper (>= 7), applauncherd-dev, libcontentaction-dev
 Standards-Version: 3.8.4
 Homepage: <insert the upstream URL, if relevant>
 
 Package: aura
 Architecture: any
-Depends: qt-components, ${shlibs:Depends}, ${misc:Depends}
+Depends: qt-components, libcontentaction0, ${shlibs:Depends}, ${misc:Depends}
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
