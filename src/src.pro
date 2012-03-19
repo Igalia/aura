@@ -32,7 +32,7 @@ SOURCES += controller.cpp   \
   unix {
     #VARIABLES
     isEmpty(PREFIX) {
-        PREFIX = /usr
+        PREFIX = /opt/$${TARGET}
   }
 BINDIR = $$PREFIX/bin
 DATADIR =$$PREFIX/share
@@ -49,7 +49,7 @@ INSTALLS += target qmlgui desktop service iconxpm icon26 icon48 icon64
   qmlgui.path = $$DATADIR/aura
   qmlgui.files += aura.qml Effects.qml ButtonBorder.qml PostCapture.qml
 
-  desktop.path = $$DATADIR/applications
+  desktop.path = /usr/share/applications
   desktop.files += $${TARGET}.desktop
 
   service.path = $$DATADIR/dbus-1/services/

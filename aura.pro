@@ -10,7 +10,7 @@ SUBDIRS  = src
 unix {
   #VARIABLES
   isEmpty(PREFIX) {
-    PREFIX = /usr
+    PREFIX = /opt/$${TARGET}
   }
 
   DATADIR =$$PREFIX/share

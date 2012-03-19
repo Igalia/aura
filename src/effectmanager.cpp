@@ -81,20 +81,8 @@ EffectManager::getEffect(const QString &name) const
 void
 EffectManager::loadEffects()
 {
-    const char *dir;
-    const gchar * const *data_dirs;
-
-    dir = g_get_user_data_dir();
-    if (!dir) {
-        loadEffectsFromDirectory(dir);
-    }
-
-    data_dirs = g_get_system_data_dirs();
-    while(*data_dirs) {
-        dir = *data_dirs;
-        loadEffectsFromDirectory(dir);
-        data_dirs++;
-    }
+    // FIXME: Use xdg to use the right data dir
+    loadEffectsFromDirectory(DATADIR);
 }
 
 void

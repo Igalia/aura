@@ -12,6 +12,6 @@
     <credential name="Location" />
     <credential name="CAP::chown" />
     <credential name="CAP::fowner" />
-    <for path="/usr/bin/aura" />
+    <for path="/opt/aura/bin/aura" />
   </request>
 </aegis>
