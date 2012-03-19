@@ -28,16 +28,29 @@
 #include <QtDeclarative>
 #include <QtCore/QtGlobal>
 
+#include <glib.h>
 #include <gst/gst.h>
+#include <string.h>
 
 #include "controller.h"
 #include "effectmanager.h"
 #include "common.h"
 #include "postcapture.h"
 
+static inline void
+env_init()
+{
+    if (strlen(DATADIR) > 0 && !g_str_has_prefix(DATADIR, "/usr")) {
+        g_setenv("XDG_DATA_DIRS",
+                 "/usr/local/share/:/usr/share/:" DATADIR,
+                 TRUE);
+    }
+}
+
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     gst_init(&argc, &argv);
+    env_init();
 
     QApplication app(argc, argv);
 
