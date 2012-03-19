@@ -27,6 +27,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QCoreApplication>
 
 #include "controller.h"
 #include "effectmanager.h"
@@ -37,6 +38,7 @@ Controller::Controller(QDeclarativeItem *parent)
     : QDeclarativeItem(parent),
       m_pipeline(0),
       m_recording(false),
+      m_pipelineStarting(false),
       m_currentZoom(ZOOM_DEFAULT),
       m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
       m_currentColorFilter(COLOR_FILTER_DEFAULT),
@@ -50,6 +52,7 @@ Controller::Controller(QDeclarativeItem *parent)
     connect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(idleChanged(bool)));
     connect(m_pipeline, SIGNAL(savedFileNameChanged(const QString &)),
             this, SIGNAL(savedFileNameChanged(const QString &)));
+    connect(m_pipeline, SIGNAL(pipelinePlaying()), this, SLOT(pipelineStartingFinished()));
     m_pipeline->prepare();
 }
 
@@ -62,7 +65,8 @@ void Controller::startPipeline()
 {
     m_pipeline->setWindowId(scene()->views()[0]->effectiveWinId());
     if (ResourceManager::instance()->acquirePlaybackResources()) {
-        qCritical() << "Controller: starting pipeline";
+        setPipelineStarting(true);
+        QCoreApplication::processEvents();
         m_pipeline->start();
     } else {
         qCritical() << "Playback resources denied";
@@ -72,7 +76,6 @@ void Controller::startPipeline()
 
 void Controller::stopPipeline()
 {
-    qCritical() << "Controller: stopping pipeline";
     m_pipeline->stop();
     ResourceManager::instance()->releaseResources();
 }
@@ -164,11 +167,19 @@ void Controller::setRecording(bool recording)
 void Controller::idleChanged(bool isIdle)
 {
     setRecording(!isIdle);
-    if (m_recording) {
-        qCritical() << "Controller: recording has started";
-    } else {
-        qCritical() << "Controller: recording has stopped";
+}
+
+void Controller::setPipelineStarting(bool pipelineStarting)
+{
+    if (m_pipelineStarting != pipelineStarting) {
+        m_pipelineStarting = pipelineStarting;
+        emit pipelineStartingChanged(m_pipelineStarting);
     }
+}
+
+void Controller::pipelineStartingFinished()
+{
+    setPipelineStarting(false);
 }
 
 QString Controller::savedFileName()

@@ -306,7 +306,6 @@ void Pipeline::setColorFilter(ControllerSettings::ColorFilter value)
 void Pipeline::setVideoEffect(const QString &value)
 {
     Effect *newEffect = EffectManager::instance()->getEffect(value);
-    qCritical() << "Pipeline: setting effect " << newEffect->name() << " with pipeline desc : " << newEffect->desc();
 
     // close valves
     g_object_set(effectValve, "drop", TRUE, NULL);
@@ -344,7 +343,6 @@ void Pipeline::handleBusMessage(GstMessage *message)
         {
             // The only message we are handling here is the prepare-xwindow-id one
             if (gst_structure_has_name (message->structure, "prepare-xwindow-id")) {
-                qCritical() << "Setting xwindow_id to " << windowId;
                 gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(viewfinder), windowId);
             }
             break;
@@ -365,7 +363,7 @@ void Pipeline::handleBusMessage(GstMessage *message)
             GError *gerror = 0;
             gchar *debug = 0;
             gst_message_parse_warning(message, &gerror, &debug);
-            qCritical() << "Debug" << debug << " Warning " << gerror->message;
+            qWarning() << "Debug" << debug << " Warning " << gerror->message;
             g_free(debug);
             g_error_free(gerror);
             break;
@@ -376,7 +374,7 @@ void Pipeline::handleBusMessage(GstMessage *message)
             GError *gerror = 0;
             gchar *debug = 0;
             gst_message_parse_info(message, &gerror, &debug);
-            qCritical() << "Debug" << debug << " Info " << gerror->message;
+            qDebug() << "Debug" << debug << " Info " << gerror->message;
             g_free(debug);
             g_error_free(gerror);
             break;
@@ -388,17 +386,7 @@ void Pipeline::handleBusMessage(GstMessage *message)
                 GstState oldstate, newstate, pending;
                 gst_message_parse_state_changed(message, &oldstate, &newstate, &pending);
                 if (newstate==GST_STATE_PLAYING) {
-                    qCritical() << "pipeline started";
-                }
-                if (newstate==GST_STATE_READY && oldstate==GST_STATE_PAUSED) {
-                    qCritical() << "pipeline paused";
-                }
-            } else if (strcmp(GST_OBJECT_NAME (GST_MESSAGE_SRC(message)), "video-encodebin") == 0) {
-                GstState oldstate, newstate, pending;
-
-                gst_message_parse_state_changed(message, &oldstate, &newstate, &pending);
-                if (newstate==GST_STATE_PLAYING) {
-                    qCritical() << "Video Elements ready";
+                    QMetaObject::invokeMethod(this, "pipelinePlaying", Qt::QueuedConnection);
                 }
             }
             break;
@@ -479,9 +467,6 @@ void Pipeline::writeMetadata()
 {
     // To make the video appear in gallery, we need to set the
     // manufacturer and model tags
-
-    qCritical() << "manufacturer " << systemInfo.manufacturer().toUtf8().constData()
-                << " model " << systemInfo.model().toUtf8().constData();
 
     gst_tag_setter_add_tags(GST_TAG_SETTER(camerabin),
                             GST_TAG_MERGE_REPLACE,

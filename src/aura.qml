@@ -66,6 +66,29 @@ Item {
             anchors.fill: parent
             color: "#080810"
 
+            Text {
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+                visible: !platformWindow.active
+                font.pixelSize: UIConstants.FONT_XLARGE
+                font.family: UIConstants.FONT_FAMILY
+                color: "white"
+                text: "Paused..."
+            }
+
+            Text {
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+                visible: controller.pipelineStarting
+                font.pixelSize: UIConstants.FONT_XLARGE
+                font.family: UIConstants.FONT_FAMILY
+                color: "white"
+                text: "Loading..."
+            }
             Component.onCompleted: console.debug("viewfinder colorkey painted")
         }
 
@@ -170,26 +193,6 @@ Item {
             property: "file"
             value: controller.savedFileName
             when: controller.__completed
-        }
-
-        Item {
-            anchors.fill: parent
-            visible: !platformWindow.active
-
-            Rectangle {
-                anchors.fill: parent
-                color: "grey"
-            }
-
-            Text {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-                font.pixelSize: UIConstants.FONT_XLARGE
-                font.family: UIConstants.FONT_FAMILY
-                text: "Camera is paused"
-            }
         }
     }
 }

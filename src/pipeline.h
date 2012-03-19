@@ -76,6 +76,7 @@ class Pipeline : public QObject
  signals:
     void idleChanged(bool isIdle);
     void savedFileNameChanged(const QString &filename);
+    void pipelinePlaying();
 
  private:
     QString nextFileName();
