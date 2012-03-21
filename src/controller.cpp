@@ -39,6 +39,7 @@ Controller::Controller(QDeclarativeItem *parent)
       m_pipeline(0),
       m_recording(false),
       m_pipelineStarting(false),
+      m_pipelineReady(false),
       m_currentZoom(ZOOM_DEFAULT),
       m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
       m_currentColorFilter(COLOR_FILTER_DEFAULT),
@@ -77,6 +78,7 @@ void Controller::startPipeline()
 void Controller::stopPipeline()
 {
     m_pipeline->stop();
+    setPipelineReady(false);
     ResourceManager::instance()->releaseResources();
 }
 
@@ -180,9 +182,18 @@ void Controller::setPipelineStarting(bool pipelineStarting)
 void Controller::pipelineStartingFinished()
 {
     setPipelineStarting(false);
+    setPipelineReady(true);
 }
 
 QString Controller::savedFileName()
 {
     return m_pipeline->savedFileName();
+}
+
+void Controller::setPipelineReady(bool pipelineReady)
+{
+    if (m_pipelineReady != pipelineReady) {
+        m_pipelineReady = pipelineReady;
+        emit pipelineReadyChanged(m_pipelineReady);
+    }
 }

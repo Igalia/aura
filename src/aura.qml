@@ -65,6 +65,7 @@ Item {
             id: viewFinderColorkeyPainter
             anchors.fill: parent
             color: "#080810"
+            z: controller.pipelineReady ? 0 : 1
 
             Text {
                 anchors {

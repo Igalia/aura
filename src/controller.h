@@ -55,6 +55,10 @@ class Controller : public QDeclarativeItem
                READ pipelineStarting
                WRITE setPipelineStarting
                NOTIFY pipelineStartingChanged)
+    Q_PROPERTY(bool pipelineReady
+               READ pipelineReady
+               WRITE setPipelineReady
+               NOTIFY pipelineReadyChanged)
 
     Controller(QDeclarativeItem *parent = 0);
     ~Controller();
@@ -72,12 +76,14 @@ class Controller : public QDeclarativeItem
     bool recording() { return m_recording; };
     QString savedFileName();
     bool pipelineStarting() {return m_pipelineStarting;};
+    bool pipelineReady() {return m_pipelineReady;};
 
 public slots:
     void setRecording(bool recording);
     void setVideoEffect(const QString &value);
     void setColorFilter(const ControllerSettings::ColorFilter value);
     void setPipelineStarting(bool pipelineStarting);
+    void setPipelineReady(bool pipelineReady);
 
 signals:
     void recordingChanged(bool recording);
@@ -85,6 +91,7 @@ signals:
     void colorFilterChanged(const ControllerSettings::ColorFilter value);
     void savedFileNameChanged(const QString &filename);
     void pipelineStartingChanged(bool pipelineStarting);
+    void pipelineReadyChanged(bool pipelineReady);
 
  public slots:
     void startPipeline();
@@ -102,6 +109,7 @@ signals:
     Pipeline *m_pipeline;
     bool m_recording;
     bool m_pipelineStarting;
+    bool m_pipelineReady;
     // current config
     double m_currentZoom;
     Pipeline::Resolution m_currentResolution;
