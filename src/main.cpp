@@ -35,7 +35,6 @@
 
 #include "controller.h"
 #include "effectmanager.h"
-#include "common.h"
 #include "postcapture.h"
 
 static inline void
@@ -66,8 +65,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QDeclarativeContext *context = view.rootContext();
     EffectManager::setup();
     context->setContextProperty("effectManager", EffectManager::instance());
-    qDebug("opening qml files in %s", QML_PATH);
-    view.setSource(QUrl::fromLocalFile(MAIN_QML_FILE));
+    view.setSource(QUrl("qrc:/aura.qml"));
     view.showFullScreen();
 
     int ret = app.exec();

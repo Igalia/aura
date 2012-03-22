@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>aura.qml</file>
+        <file>ButtonBorder.qml</file>
+        <file>Effects.qml</file>
+        <file>PostCapture.qml</file>
+        <file>ViewFinder.qml</file>
+        <file>resources/aura-bg.png</file>
+    </qresource>
+</RCC>

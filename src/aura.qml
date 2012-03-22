@@ -69,7 +69,7 @@ Item {
 
             Image {
                 anchors.fill: parent
-                source: "file:///opt/aura/share/aura/aura-bg.png"
+                source: "qrc:/resources/aura-bg.png"
                 visible: !platformWindow.active || controller.pipelineStarting
             }
 

@@ -26,8 +26,5 @@ unix {
   splash.files = data/splash/aura-splash.jpg
   splash.path = $$DATADIR/aura
 
-  bg.files = data/bg/aura-bg.png
-  bg.path = $$DATADIR/aura
-
-  INSTALLS += effects icon64 splash bg
+  INSTALLS += effects icon64 splash
 }

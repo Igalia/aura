@@ -28,7 +28,6 @@
 #include <QDBusConnection>
 #include <contentaction.h>
 
-#include "common.h"
 #include "postcapture.h"
 
 using ContentAction::Action;
@@ -37,7 +36,7 @@ PostCapture::PostCapture(QDeclarativeItem *parent)
     : QDeclarativeItem(parent)
 {
     QDeclarativeComponent
-        component(&m_engine, QUrl::fromLocalFile(QML_PATH "PostCapture.qml"));
+        component(&m_engine, QUrl("qrc:/PostCapture.qml"));
     QDeclarativeItem *item =
         dynamic_cast<QDeclarativeItem *>(component.create());
     item->setParentItem(this);

@@ -29,6 +29,8 @@ SOURCES += controller.cpp   \
            postcapture.cpp
 #FORMS#
 
+RESOURCES += res.qrc
+
   unix {
     #VARIABLES
     isEmpty(PREFIX) {
@@ -42,12 +44,9 @@ DEFINES += DATADIR=\\\"$$DATADIR\\\" PKGDATADIR=\\\"$$PKGDATADIR\\\" \
 
 #MAKE INSTALL
 
-INSTALLS += target qmlgui desktop service iconxpm icon26 icon48 icon64
+INSTALLS += target desktop service iconxpm icon26 icon48 icon64
 
   target.path =$$BINDIR
-
-  qmlgui.path = $$DATADIR/aura
-  qmlgui.files += aura.qml Effects.qml ButtonBorder.qml PostCapture.qml
 
   desktop.path = /usr/share/applications
   desktop.files += $${TARGET}.desktop
