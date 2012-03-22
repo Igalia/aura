@@ -195,5 +195,20 @@ Item {
             value: controller.savedFileName
             when: controller.__completed
         }
+        Text {
+            anchors {
+                right: parent.right
+                rightMargin: 10
+                bottom: parent.bottom
+                bottomMargin: 10
+            }
+            opacity: controller.recording ? 1 : 0
+            visible: opacity > 0
+            Behavior on opacity { NumberAnimation { duration: animationDuration } }
+            font.pixelSize: UIConstants.FONT_LARGE
+            font.family: UIConstants.FONT_FAMILY
+            color: "white"
+            text: controller.recordedTime
+        }
     }
 }

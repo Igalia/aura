@@ -29,6 +29,7 @@
 
 #include <QObject>
 #include <QDeclarativeItem>
+#include <QTimer>
 #include "pipeline.h"
 
 class Controller : public QDeclarativeItem
@@ -59,6 +60,9 @@ class Controller : public QDeclarativeItem
                READ pipelineReady
                WRITE setPipelineReady
                NOTIFY pipelineReadyChanged)
+    Q_PROPERTY(QString recordedTime
+               READ recordedTime
+               NOTIFY recordedTimeChanged)
 
     Controller(QDeclarativeItem *parent = 0);
     ~Controller();
@@ -77,13 +81,20 @@ class Controller : public QDeclarativeItem
     QString savedFileName();
     bool pipelineStarting() {return m_pipelineStarting;};
     bool pipelineReady() {return m_pipelineReady;};
+    QString recordedTime();
 
 public slots:
+    void startPipeline();
+    void stopPipeline();
+    void startRecording();
+    void stopRecording();
+    void shutterClicked();
     void setRecording(bool recording);
     void setVideoEffect(const QString &value);
     void setColorFilter(const ControllerSettings::ColorFilter value);
     void setPipelineStarting(bool pipelineStarting);
     void setPipelineReady(bool pipelineReady);
+    void setRecordedTime(int recordedTime);
 
 signals:
     void recordingChanged(bool recording);
@@ -92,24 +103,21 @@ signals:
     void savedFileNameChanged(const QString &filename);
     void pipelineStartingChanged(bool pipelineStarting);
     void pipelineReadyChanged(bool pipelineReady);
-
- public slots:
-    void startPipeline();
-    void stopPipeline();
-    void startRecording();
-    void stopRecording();
-    void shutterClicked();
+    void recordedTimeChanged(const QString &recordedTime);
 
  private slots:
     void resourcesLost();
     void idleChanged(bool isIdle);
     void pipelineStartingFinished();
+    void recordingTimerTimeout();
 
  private:
     Pipeline *m_pipeline;
     bool m_recording;
     bool m_pipelineStarting;
     bool m_pipelineReady;
+    int m_recordedTime;
+    QTimer m_recordingTimer;
     // current config
     double m_currentZoom;
     Pipeline::Resolution m_currentResolution;

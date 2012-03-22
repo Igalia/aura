@@ -40,6 +40,8 @@ Controller::Controller(QDeclarativeItem *parent)
       m_recording(false),
       m_pipelineStarting(false),
       m_pipelineReady(false),
+      m_recordedTime(0),
+      m_recordingTimer(),
       m_currentZoom(ZOOM_DEFAULT),
       m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
       m_currentColorFilter(COLOR_FILTER_DEFAULT),
@@ -54,6 +56,9 @@ Controller::Controller(QDeclarativeItem *parent)
     connect(m_pipeline, SIGNAL(savedFileNameChanged(const QString &)),
             this, SIGNAL(savedFileNameChanged(const QString &)));
     connect(m_pipeline, SIGNAL(pipelinePlaying()), this, SLOT(pipelineStartingFinished()));
+
+    m_recordingTimer.setInterval(1000);
+    connect(&m_recordingTimer, SIGNAL(timeout()), this, SLOT(recordingTimerTimeout()));
     m_pipeline->prepare();
 }
 
@@ -90,7 +95,9 @@ void Controller::setupEffects()
 void Controller::startRecording()
 {
     if (ResourceManager::instance()->acquireRecordingResources()) {
+        setRecordedTime(0);
         m_pipeline->startRecording();
+        m_recordingTimer.start();
     } else {
         qCritical() << "Recording resources denied";
         resourcesLost();
@@ -99,6 +106,7 @@ void Controller::startRecording()
 
 void Controller::stopRecording()
 {
+    m_recordingTimer.stop();
     m_pipeline->stopRecording();
     if (!ResourceManager::instance()->acquirePlaybackResources()) {
         qCritical() << "Playback resources denied after recording";
@@ -195,5 +203,32 @@ void Controller::setPipelineReady(bool pipelineReady)
     if (m_pipelineReady != pipelineReady) {
         m_pipelineReady = pipelineReady;
         emit pipelineReadyChanged(m_pipelineReady);
+    }
+}
+
+QString Controller::recordedTime()
+{
+    QString minutes = QString::number(m_recordedTime/60);
+    if (minutes.length() == 1) {
+        minutes.prepend("0");
+    }
+    QString seconds = QString::number(m_recordedTime%60);
+    if (seconds.length() == 1) {
+        seconds.prepend("0");
+    }
+
+    return (minutes + ":" + seconds);
+}
+
+void Controller::recordingTimerTimeout()
+{
+    setRecordedTime(m_recordedTime + 1);
+}
+
+void Controller::setRecordedTime(int recordedTime)
+{
+    if (m_recordedTime != recordedTime) {
+        m_recordedTime = recordedTime;
+        emit recordedTimeChanged(this->recordedTime());
     }
 }
