@@ -38,10 +38,12 @@ class ControllerSettings : public QDeclarativeItem
     // colour filter values
     enum ColorFilter {
         Normal = 0,
-        Grayscale,
         Sepia,
-        Vivid,
         Negative,
+        Grayscale,
+        Natural,
+        Vivid,
+        ColorSwap,
         Solarize
     };
 };

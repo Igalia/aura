@@ -280,17 +280,23 @@ void Pipeline::setColorFilter(ControllerSettings::ColorFilter value)
     case ControllerSettings::Normal:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NORMAL;
         break;
+    case ControllerSettings::Sepia:
+        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SEPIA;
+        break;
+    case ControllerSettings::Negative:
+        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NEGATIVE;
+        break;
     case ControllerSettings::Grayscale:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_GRAYSCALE;
         break;
-    case ControllerSettings::Sepia:
-        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SEPIA;
+    case ControllerSettings::Natural:
+        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NATURAL;
         break;
     case ControllerSettings::Vivid:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_VIVID;
         break;
-    case ControllerSettings::Negative:
-        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_NEGATIVE;
+    case ControllerSettings::ColorSwap:
+        mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_COLORSWAP;
         break;
     case ControllerSettings::Solarize:
         mode = GST_PHOTOGRAPHY_COLOUR_TONE_MODE_SOLARIZE;

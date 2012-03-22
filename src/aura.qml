@@ -124,7 +124,8 @@ Item {
         Effects {
             id: colorFilters
             animationDuration: page.animationDuration
-            effectNames: [ "Normal", "Grayscale", "Sepia", "Vivid", "Negative", "Solarize" ]
+            effectNames: [ "Normal", "Sepia", "Negative", "Grayscale", "Natural", "Vivid",
+                           "Color Swap", "Solarize" ]
         }
 
         Binding {
