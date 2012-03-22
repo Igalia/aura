@@ -67,6 +67,12 @@ Item {
             color: "#080810"
             z: controller.pipelineReady ? 0 : 1
 
+            Image {
+                anchors.fill: parent
+                source: "file:///opt/aura/share/aura/aura-bg.png"
+                visible: !platformWindow.active || controller.pipelineStarting
+            }
+
             Text {
                 anchors {
                     horizontalCenter: parent.horizontalCenter
