@@ -227,29 +227,22 @@ void Pipeline::stopRecording()
 void Pipeline::setResolution(Resolution value)
 {
     int width, height;
-    int vfPosition, vfWidth;
 
     switch (value) {
     case Low:
         // QVGA
         width = LOW_RES_WIDTH;
         height = LOW_RES_HEIGHT;
-        vfPosition = (848 - 640) / 2;
-        vfWidth = 640;
         break;
     case Medium:
         // VGA
         width = MID_RES_WIDTH;
         height = MID_RES_HEIGHT;
-        vfPosition = (848 - 640) / 2;
-        vfWidth = 640;
         break;
     case High:
         // WVGA
         width = HIGH_RES_WIDTH;
         height = HIGH_RES_HEIGHT;
-        vfPosition = 0;
-        vfWidth = 848;
         break;
     default:
         qCritical() << "Unsupported resolution value " << value;
@@ -261,10 +254,10 @@ void Pipeline::setResolution(Resolution value)
 
     // set new rendering position to the viewfinder
     gst_x_overlay_set_render_rectangle(GST_X_OVERLAY(viewfinder),
-                                       vfPosition,
-                                       0,
-                                       vfWidth,
-                                       480);
+                                       32,
+                                       30,
+                                       560,
+                                       420);
 }
 
 void Pipeline::setZoom(double value)

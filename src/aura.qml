@@ -70,21 +70,24 @@ PageStackWindow {
             }
 
             Rectangle {
-                id: viewFinderColorkeyPainter
+                id: ui
                 anchors.fill: parent
-                color: "#080810"
-                z: controller.pipelineReady ? 0 : 1
+
+                MouseArea {
+                    id: eventEater
+                    anchors.fill: parent
+                    z: controller.pipelineReady ? 0 : 1
+                }
 
                 Image {
                     anchors.fill: parent
                     source: "qrc:/resources/aura-bg.png"
-                    visible: !platformWindow.active ||
-                        controller.pipelineStarting
                 }
 
                 Text {
                     anchors {
                         horizontalCenter: parent.horizontalCenter
+                        horizontalCenterOffset: -114
                         verticalCenter: parent.verticalCenter
                     }
                     visible: !platformWindow.active
@@ -97,6 +100,7 @@ PageStackWindow {
                 Text {
                     anchors {
                         horizontalCenter: parent.horizontalCenter
+                        horizontalCenterOffset: -114
                         verticalCenter: parent.verticalCenter
                     }
                     visible: controller.pipelineStarting
@@ -105,8 +109,100 @@ PageStackWindow {
                     color: "white"
                     text: "Loading..."
                 }
-                Component.onCompleted:
-                    console.debug("viewfinder colorkey painted")
+
+                ToolIcon {
+                    id: shutter
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -80
+                        verticalCenter: parent.verticalCenter
+                    }
+                    iconId: controller.recording ? "camera-ongoing-recording" : "camera-shutter"
+                    opacity: __dialogsVisible ? 0 : 1
+                    visible: opacity > 0
+                    Behavior on opacity { NumberAnimation { duration: animationDuration } }
+                    onClicked: {
+                        console.debug("shutter clicked")
+                        controller.shutterClicked()
+                    }
+                }
+
+                ToolIcon {
+                    id: colorFilterConf
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -129
+                        verticalCenter: parent.bottom
+                        verticalCenterOffset: -130
+                    }
+                    iconId: "camera-filter-solarize-screen"
+                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    visible: opacity > 0
+                    Behavior on opacity { NumberAnimation { duration: animationDuration } }
+                    onClicked: colorFilters.show()
+                }
+
+                ToolIcon {
+                    id: filtersConf
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -129
+                        verticalCenter: parent.bottom
+                        verticalCenterOffset: -60
+                    }
+                    iconId: "camera-high-contrast"
+                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    visible: opacity > 0
+                    Behavior on opacity { NumberAnimation { duration: animationDuration } }
+                   onClicked: effects.show()
+                }
+
+                PostCapture {
+                    id: postCapture
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -129
+                        verticalCenter: parent.top
+                        verticalCenterOffset: 130
+                    }
+                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    visible: opacity > 0 && file != "" && !controller.recording
+                    enabled: visible
+                    Behavior on opacity { NumberAnimation { duration: animationDuration } }
+                    onClicked: controller.stopPipeline()
+                }
+
+                ToolIcon {
+                    id: aboutIcon
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -129
+                        verticalCenter: parent.top
+                        verticalCenterOffset: 60
+                   }
+                    iconSource: "file:///usr/share/maps/images/icon_about.png"
+                    opacity: page.__dialogsVisible || controller.recording ? 0 : 1
+                    visible: opacity > 0
+                    Behavior on opacity {
+                        NumberAnimation { duration: page.animationDuration }
+                    }
+                }
+
+                Text {
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -188
+                        verticalCenter: parent.verticalCenter
+                    }
+                    opacity: controller.recording ? 1 : 0
+                    visible: opacity > 0
+                    Behavior on opacity { NumberAnimation { duration: animationDuration } }
+                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.family: UIConstants.FONT_FAMILY
+                    color: "white"
+                    text: controller.recordedTime
+                }
+                    Component.onCompleted: console.debug("viewfinder colorkey painted")
             }
 
             Controller {
@@ -155,107 +251,11 @@ PageStackWindow {
                 when: controller.__completed
             }
 
-            ToolIcon {
-                id: shutter
-                anchors {
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-                }
-                iconId: controller.recording ? "camera-ongoing-recording" :
-                    "camera-shutter"
-                opacity: page.__dialogsVisible ? 0 : 1
-                visible: opacity > 0
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                onClicked: {
-                    console.debug("shutter clicked")
-                    controller.shutterClicked()
-                }
-            }
-
-            ToolIcon {
-                id: colorFilterConf
-                anchors {
-                    right: parent.right
-                    bottom: filtersConf.top
-                }
-                iconId: "camera-filter-solarize-screen"
-                opacity: page.__dialogsVisible || controller.recording ? 0 : 1
-                visible: opacity > 0
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                onClicked: colorFilters.show()
-            }
-
-            ToolIcon {
-                id: filtersConf
-                anchors {
-                    right: parent.right
-                    bottom: parent.bottom
-                }
-                iconId: "camera-high-contrast"
-                opacity: page.__dialogsVisible || controller.recording ? 0 : 1
-                visible: opacity > 0
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                onClicked: effects.show()
-            }
-
-            ToolIcon {
-                id: aboutIcon
-                anchors {
-                    left: parent.left
-                    bottom: parent.bottom
-                }
-                iconSource: "file:///usr/share/maps/images/icon_about.png"
-                opacity: page.__dialogsVisible || controller.recording ? 0 : 1
-                visible: opacity > 0
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                onClicked: console.debug("about dialog")
-            }
-
-            PostCapture {
-                id: postCapture
-                anchors {
-                    left: parent.left
-                    bottom: aboutIcon.top
-                }
-                opacity: page.__dialogsVisible || controller.recording ? 0 : 1
-                visible: opacity > 0 && file != "" && !controller.recording
-                enabled: visible
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                onClicked: controller.stopPipeline()
-            }
-
             Binding {
                 target: postCapture
                 property: "file"
                 value: controller.savedFileName
                 when: controller.__completed
-            }
-            Text {
-                anchors {
-                    right: parent.right
-                    rightMargin: 10
-                    bottom: parent.bottom
-                    bottomMargin: 10
-                }
-                opacity: controller.recording ? 1 : 0
-                visible: opacity > 0
-                Behavior on opacity {
-                    NumberAnimation { duration: page.animationDuration }
-                }
-                font.pixelSize: UIConstants.FONT_LARGE
-                font.family: UIConstants.FONT_FAMILY
-                color: "white"
-                text: controller.recordedTime
             }
         }
     }
