@@ -41,6 +41,7 @@ PageStackWindow {
 
     Page {
         id: page
+        orientationLock: PageOrientation.LockLandscape
         width: screen.displayWidth; height: screen.displayHeight
 
         Component.onCompleted: {
