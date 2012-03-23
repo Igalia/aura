@@ -204,11 +204,26 @@ PageStackWindow {
                 onClicked: effects.show()
             }
 
+            ToolIcon {
+                id: aboutIcon
+                anchors {
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+                iconSource: "file:///usr/share/maps/images/icon_about.png"
+                opacity: page.__dialogsVisible || controller.recording ? 0 : 1
+                visible: opacity > 0
+                Behavior on opacity {
+                    NumberAnimation { duration: page.animationDuration }
+                }
+                onClicked: console.debug("about dialog")
+            }
+
             PostCapture {
                 id: postCapture
                 anchors {
                     left: parent.left
-                    bottom: parent.bottom
+                    bottom: aboutIcon.top
                 }
                 opacity: page.__dialogsVisible || controller.recording ? 0 : 1
                 visible: opacity > 0 && file != "" && !controller.recording
