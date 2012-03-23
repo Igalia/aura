@@ -73,38 +73,26 @@ Rectangle {
         visible = false
     }
 
-    Rectangle {
-        id: backgroundRectangle
-        anchors.fill: parent
-        color: "#080810"
-    }
-
     Flickable {
         id: flickable
         anchors {
             top: parent.top
-            left: parent.left
             right: parent.right
-            bottom: acceptButtonItem.top
+            bottom: acceptButton.top
             topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
-            leftMargin: UIConstants.DEFAULT_MARGIN
             rightMargin: UIConstants.DEFAULT_MARGIN
         }
-        contentHeight: flickableButtonBorder.height
+        width: 220
+        contentHeight: effectColumn.height
         clip: true
-
-        ButtonBorder {
-            id: flickableButtonBorder
-            anchors.fill: effectColumn
-        }
 
         ButtonColumn {
             id: effectColumn
             anchors {
-                horizontalCenter: parent.horizontalCenter
+                right: parent.right
             }
-
+            width: parent.width
             Repeater {
                 id: repeater
                 model: effectNames.length
@@ -118,30 +106,20 @@ Rectangle {
         }
     }
 
-    Item {
-        id: acceptButtonItem
+    Button {
+        id: acceptButton
         anchors {
-            horizontalCenter: parent.horizontalCenter
+            right: parent.right
             bottom: parent.bottom
-            topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
+            rightMargin: UIConstants.DEFAULT_MARGIN
             bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
         }
-        width: acceptButtonBorder.width
-        height: acceptButtonBorder.height
-
-        ButtonBorder {
-            id: acceptButtonBorder
-            anchors.fill: acceptButton
-        }
-
-        Button {
-            id: acceptButton
-            text: "Accept"
-            font.family: UIConstants.FONT_FAMILY
-            onClicked: {
-                console.debug("accept")
-                effectsPage.hide()
-            }
+        width: 220
+        text: "Accept"
+        font.family: UIConstants.FONT_FAMILY
+        onClicked: {
+            console.debug("accept")
+            effectsPage.hide()
         }
     }
 }
