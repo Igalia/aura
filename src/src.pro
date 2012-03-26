@@ -3,8 +3,8 @@ TARGET = "aura"
 
 QT += declarative
 CONFIG += meegotouch link_pkgconfig mobility qdeclarative-boostable
-PKGCONFIG += gstreamer-0.10 glib-2.0 libresourceqt1 gstreamer-plugins-bad-0.10 \
-             gstreamer-pbutils-0.10 gstreamer-interfaces-0.10 contentaction-0.1
+PKGCONFIG += gstreamer-0.10 gstreamer-interfaces-0.10 gstreamer-plugins-bad-0.10 \
+             libresourceqt1 contentaction-0.1
 MOBILITY += systeminfo
 
 QMAKE_CXXFLAGS_RELEASE += -Werror
