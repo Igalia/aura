@@ -36,6 +36,7 @@
 #include "controller.h"
 #include "effectmanager.h"
 #include "postcapture.h"
+#include "aboutviewcontroller.h"
 
 static inline void
 env_init()
@@ -63,6 +64,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
                                                    "ControllerSettings "
                                                    "settings to QML");
     QDeclarativeContext *context = view.rootContext();
+    AboutViewController *controller = new AboutViewController(context);
+    context->setContextProperty("aboutViewController", controller);
     EffectManager::setup();
     context->setContextProperty("effectManager", EffectManager::instance());
     view.setSource(QUrl("qrc:/aura.qml"));

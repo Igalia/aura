@@ -266,7 +266,7 @@ Page {
                                 anchors.fill: parent
                                 onClicked: {
                                     if (model.action === 'openStore') {
-                                        controller.openStoreClient(model.data)
+                                        aboutViewController.openStoreClient(model.data)
                                     } else if (model.action === 'openExternally') {
                                         Qt.openUrlExternally(model.data)
                                     }

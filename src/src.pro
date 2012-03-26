@@ -18,6 +18,7 @@ HEADERS += settings.h       \
            effectmanager.h  \
            resourcemanager.h \
            pipeline.h       \
+           aboutviewcontroller.h \
            postcapture.h
 
 SOURCES += controller.cpp   \
@@ -26,6 +27,7 @@ SOURCES += controller.cpp   \
            resourcemanager.cpp \
            pipeline.cpp     \
            main.cpp         \
+           aboutviewcontroller.cpp \
            postcapture.cpp
 #FORMS#
 
