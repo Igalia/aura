@@ -186,6 +186,42 @@ PageStackWindow {
                     Behavior on opacity {
                         NumberAnimation { duration: page.animationDuration }
                     }
+                    onClicked: appWindow.pageStack.push(aboutView)
+
+                    Component {
+                        id: aboutView
+                        AboutView {
+                            appString: "Aura"
+                            iconSource: "file:///opt/aura/share/icons/hicolor/" +
+                            "64x64/apps/aura.png"
+                            email: "info@igalia.com"
+                            twitterUrl: "https://twitter.com/#!/Igalia"
+                            copyright: "Copyright © 2012 Igalia"
+                            recommendBody: ""
+                            license:
+                                "This program is free software; you can " +
+                                "redistribute it and/or modify it under the " +
+                                "terms of the GNU Lesser General Public " +
+                                "License as published by the Free Software " +
+                                "Foundation; version 2.1 of the License, or " +
+                                "(at your option) any later version." +
+                                "<br/><br/>" +
+
+                                "This program is distributed in the hope " +
+                                "that it will be useful, but WITHOUT ANY " +
+                                "WARRANTY; without even the implied warranty " +
+                                "of MERCHANTABILITY or FITNESS FOR A " +
+                                "PARTICULAR PURPOSE. See the GNU Lesser " +
+                                "General Public License for more details." +
+                                "<br/><br/>" +
+
+                                "You should have received a copy of the GNU " +
+                                "Lesser General Public License along with " +
+                                "this program. If not, see " +
+                                "<a href=\"http://www.gnu.org/licenses\">" +
+                                "http://www.gnu.org/licenses</a><br/><br/>"
+                        }
+                    }
                 }
 
                 Text {
