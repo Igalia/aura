@@ -118,7 +118,7 @@ PageStackWindow {
                         verticalCenter: parent.verticalCenter
                     }
                     iconId: controller.recording ? "camera-ongoing-recording" : "camera-shutter"
-                    opacity: __dialogsVisible ? 0 : 1
+                    opacity: page.__dialogsVisible ? 0 : 1
                     visible: opacity > 0
                     Behavior on opacity { NumberAnimation { duration: animationDuration } }
                     onClicked: {
@@ -136,7 +136,7 @@ PageStackWindow {
                         verticalCenterOffset: -130
                     }
                     iconId: "camera-filter-solarize-screen"
-                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    opacity: page.__dialogsVisible || controller.recording ? 0 : 1
                     visible: opacity > 0
                     Behavior on opacity { NumberAnimation { duration: animationDuration } }
                     onClicked: colorFilters.show()
@@ -151,7 +151,7 @@ PageStackWindow {
                         verticalCenterOffset: -60
                     }
                     iconId: "camera-high-contrast"
-                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    opacity: page.__dialogsVisible || controller.recording ? 0 : 1
                     visible: opacity > 0
                     Behavior on opacity { NumberAnimation { duration: animationDuration } }
                    onClicked: effects.show()
@@ -165,7 +165,7 @@ PageStackWindow {
                         verticalCenter: parent.top
                         verticalCenterOffset: 130
                     }
-                    opacity: __dialogsVisible || controller.recording ? 0 : 1
+                    opacity: page.__dialogsVisible || controller.recording ? 0 : 1
                     visible: opacity > 0 && file != "" && !controller.recording
                     enabled: visible
                     Behavior on opacity { NumberAnimation { duration: animationDuration } }
