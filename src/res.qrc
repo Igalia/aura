@@ -7,6 +7,14 @@
         <file>ViewFinder.qml</file>
         <file>AboutView.qml</file>
         <file>resources/aura-bg.png</file>
+        <file>resources/button-bg.png</file>
+        <file>resources/button-bg-pressed.png</file>
+        <file>resources/button-bg-selected.png</file>
+        <file>resources/shutter-bg.png</file>
+        <file>resources/shutter-bg-pressed.png</file>
+        <file>resources/timer-bg.png</file>
+        <file>resources/video-icon.png</file>
+        <file>resources/recording-icon.png</file>
         <file>resources/round-corners-shadow.png</file>
     </qresource>
 </RCC>

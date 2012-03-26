@@ -34,7 +34,12 @@ import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasCons
 
 Rectangle {
     id: effectsPage
-    anchors.fill: parent
+    anchors {
+        top: parent.top
+        bottom: parent.bottom
+        right: parent.right
+    }
+    width: 228
     color: "transparent"
     visible: false
 
@@ -77,13 +82,13 @@ Rectangle {
         id: flickable
         anchors {
             top: parent.top
+            left: parent.left
             right: parent.right
             bottom: acceptButton.top
-            topMargin: UIConstants.HEADER_DEFAULT_TOP_SPACING_LANDSCAPE
-            bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
-            rightMargin: UIConstants.DEFAULT_MARGIN
+            topMargin: 30
+            bottomMargin: 30
+            rightMargin: 30
         }
-        width: 220
         contentHeight: effectColumn.height
         clip: true
 
@@ -98,6 +103,16 @@ Rectangle {
                 model: effectNames.length
 
                 Button {
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        checkedBackground: "qrc:/resources/button-bg-selected.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    width: 198
+                    height: 60
                     property int effectIndex: index
                     property string effectName: effectNames[index]
                     text: effectName
@@ -111,14 +126,22 @@ Rectangle {
         anchors {
             right: parent.right
             bottom: parent.bottom
-            rightMargin: UIConstants.DEFAULT_MARGIN
-            bottomMargin: UIConstants.HEADER_DEFAULT_BOTTOM_SPACING_LANDSCAPE
+            left: parent.left
+            rightMargin: 30
+            bottomMargin: 30
         }
-        width: 220
+        platformStyle: ButtonStyle {
+            background: "qrc:/resources/button-bg.png"
+            checkedBackground: "qrc:/resources/button-bg-selected.png"
+            pressedBackground: "qrc:/resources/button-bg-pressed.png"
+            textColor: "white"
+            fontPixelSize: UIConstants.FONT_DEFAULT
+            fontFamily: UIConstants.FONT_FAMILY
+        }
+        width: 198
+        height: 60
         text: "Accept"
-        font.family: UIConstants.FONT_FAMILY
         onClicked: {
-            console.debug("accept")
             effectsPage.hide()
         }
     }
