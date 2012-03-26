@@ -30,21 +30,16 @@ import com.nokia.extras 1.0
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as ExtrasConstants
 
-MouseArea {
+Button {
     height: 60
     width: 198
-    Image {
-        anchors.fill: parent
-        source: parent.pressed ? "qrc:/resources/button-bg-pressed.png" : "qrc:/resources/button-bg.png"
+    platformStyle: ButtonStyle {
+        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+        textColor: "white"
+        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
     }
-    Text {
-        anchors {
-            horizontalCenter: parent.horizontalCenter
-            verticalCenter: parent.verticalCenter
-        }
-        font.pixelSize: UIConstants.FONT_DEFAULT
-        font.family: UIConstants.FONT_FAMILY
-        color: "white"
-        text: "View"
-    }
+    text: "View"
 }

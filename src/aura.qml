@@ -103,8 +103,16 @@ PageStackWindow {
                     text: "Loading..."
                 }
 
-                MouseArea {
+                Button {
                     id: about
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
                     anchors {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -129
@@ -113,20 +121,7 @@ PageStackWindow {
                     }
                     height: 60
                     width: 198
-                    Image {
-                        anchors.fill: parent
-                        source: parent.pressed ? "qrc:/resources/button-bg-pressed.png" : "qrc:/resources/button-bg.png"
-                    }
-                    Text {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.family: UIConstants.FONT_FAMILY
-                        color: "white"
-                        text: "About"
-                    }
+                    text: "About"
                     enabled: controller.pipelineReady
                     visible: !controller.recording && !page.__dialogsVisible
 
@@ -181,8 +176,16 @@ PageStackWindow {
                     onClicked: controller.stopPipeline()
                 }
 
-                MouseArea {
+                Button {
                     id: shutter
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/shutter-bg.png"
+                        disabledBackground: "qrc:/resources/shutter-bg.png"
+                        pressedBackground: "qrc:/resources/shutter-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
                     anchors {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -80
@@ -190,26 +193,7 @@ PageStackWindow {
                     }
                     height: 100
                     width: 100
-                    Image {
-                        anchors.fill: parent
-                        source: parent.pressed ? "qrc:/resources/shutter-bg-pressed.png" : "qrc:/resources/shutter-bg.png"
-                    }
-                    Image {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        source: "qrc:/resources/video-icon.png"
-                        visible: !controller.recording
-                    }
-                    Image {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        source: "qrc:/resources/recording-icon.png"
-                        visible: controller.recording
-                    }
+                    iconSource: controller.recording ? "qrc:/resources/recording-icon.png" : "qrc:/resources/video-icon.png"
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
 
@@ -218,8 +202,16 @@ PageStackWindow {
                     }
                 }
 
-                MouseArea {
+                Button {
                     id: colorFilterConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
                     anchors {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -129
@@ -228,28 +220,23 @@ PageStackWindow {
                     }
                     height: 60
                     width: 198
-                    Image {
-                        anchors.fill: parent
-                        source: parent.pressed ? "qrc:/resources/button-bg-pressed.png" : "qrc:/resources/button-bg.png"
-                    }
-                    Text {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.family: UIConstants.FONT_FAMILY
-                        color: "white"
-                        text: colorFilters.effectNames[controller.colorFilter]
-                    }
+                    text: colorFilters.effectNames[controller.colorFilter]
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
 
                     onClicked: colorFilters.show()
                 }
 
-                MouseArea {
+                Button {
                     id: filtersConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
                     anchors {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -129
@@ -258,20 +245,7 @@ PageStackWindow {
                     }
                     height: 60
                     width: 198
-                    Image {
-                        anchors.fill: parent
-                        source: parent.pressed ? "qrc:/resources/button-bg-pressed.png" : "qrc:/resources/button-bg.png"
-                    }
-                    Text {
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-                        font.pixelSize: UIConstants.FONT_DEFAULT
-                        font.family: UIConstants.FONT_FAMILY
-                        color: "white"
-                        text: controller.videoEffect
-                    }
+                    text: controller.videoEffect
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
                     onClicked: effects.show()
