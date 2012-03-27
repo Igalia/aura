@@ -3,7 +3,7 @@ Section: user/Other
 Priority: extra
 Maintainer: Xabier Rodriguez Calvar <calvaris@igalia.com>
 Build-Depends: debhelper (>= 7), applauncherd-dev, libcontentaction-dev,
- libqt4-dev, libgstreamer0.10-dev
+ libqt4-dev, libgstreamer0.10-dev, gstreamer0.10-plugins-bad-dev
 Standards-Version: 3.8.4
 XB-Maemo-Flags: visible
 XB-Homepage: https://projects.developer.nokia.com/whatever
