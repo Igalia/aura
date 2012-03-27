@@ -56,6 +56,7 @@ Page {
     property string storeUrl: ''
     property string twitterUrl: ''
     property string publisherUrl: ''
+    property string websiteUrl: ''
     property string copyright: ''
     property string disclaimer: ''
 
@@ -71,6 +72,7 @@ Page {
     onStoreUrlChanged: modelSetValues()
     onTwitterUrlChanged: modelSetValues()
     onPublisherUrlChanged: modelSetValues()
+    onWebsiteUrlChanged: modelSetValued()
 
     function modelSetValues() {
         console.debug("modelSetValues()")
@@ -115,6 +117,12 @@ Page {
         ListElement {
             title: 'Other applications made by us'
             action: 'openStore'
+            data: ''
+            visibility: true
+        }
+        ListElement {
+            title: 'Visit our website'
+            action: 'openExternally'
             data: ''
             visibility: true
         }
@@ -163,6 +171,14 @@ Page {
                 __numItems++
             } else {
                 aboutOptions.get(4).visibility = false
+            }
+
+            if (websiteUrl != '') {
+                aboutOptions.get(5).data = websiteUrl
+                aboutOptions.get(5).visibility = true
+                __numItems++
+            } else {
+                aboutOptions.get(5).visibility = false
             }
 
             for (var i = 0; i < 6; i++) {
