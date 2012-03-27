@@ -173,9 +173,10 @@ PageStackWindow {
                         verticalCenter: parent.top
                         verticalCenterOffset: 125
                     }
-                    enabled: controller.pipelineReady
+                    enabled: controller.pipelineReady && file != ""
                     visible: !controller.recording && !page.__dialogsVisible
                     onClicked: controller.stopPipeline()
+                    opacity: enabled ? 1 : 0.3
                 }
 
                 Button {
