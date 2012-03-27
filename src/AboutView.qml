@@ -165,11 +165,11 @@ Page {
                 aboutOptions.get(4).visibility = false
             }
 
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 6; i++) {
                 if (aboutOptions.get(i).visibility) {
-                    console.debug("aboutOptions.get(" + i + ").data: " + aboutOptions.get(i).data)
+                    console.debug("\"" + aboutOptions.get(i).title + "\" data: " + aboutOptions.get(i).data)
                 } else {
-                    console.debug("aboutOptions.get(" + i + ").visibility: " + aboutOptions.get(i).visibility)
+                    console.debug("\"" + aboutOptions.get(i).title + "\" visibility: " + aboutOptions.get(i).visibility)
                 }
             }
         }
