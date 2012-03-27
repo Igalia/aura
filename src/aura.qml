@@ -27,6 +27,7 @@
 import QtQuick 1.1
 import com.nokia.meego 1.0
 import com.nokia.extras 1.0
+import QtMobility.systeminfo 1.2
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 import "file:///usr/lib/qt4/imports/com/nokia/extras/constants.js" as
     ExtrasConstants
@@ -356,6 +357,11 @@ PageStackWindow {
                 property: "file"
                 value: controller.savedFileName
                 when: controller.__completed
+            }
+
+            ScreenSaver {
+                id: screenSaver
+                screenSaverDelayed: controller.recording
             }
         }
     }
