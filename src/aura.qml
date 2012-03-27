@@ -137,6 +137,7 @@ PageStackWindow {
                             twitterUrl: "https://twitter.com/#!/Igalia"
                             copyright: "Copyright © 2012 Igalia"
                             storeUrl: "http://store.ovi.com/content/266783"
+                            websiteUrl: "http://www.igalia.com"
                             license:
                                 "This program is free software; you can " +
                                 "redistribute it and/or modify it under the " +
