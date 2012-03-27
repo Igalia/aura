@@ -41,7 +41,6 @@ EffectManager::setup(QObject *parent)
     if (instancePointer.isNull()) {
         instancePointer = new EffectManager(parent);
         instancePointer->loadEffects();
-        instancePointer->dumpEffects();
     }
 }
 
@@ -106,8 +105,6 @@ EffectManager::loadEffectsFromDirectory(const char *dir)
     g_free(path);
 
     if (!directory.exists()) {
-        qCritical() << directory.absolutePath()
-                    << "doesn't exist";
         return;
     }
 
