@@ -130,6 +130,7 @@ PageStackWindow {
                     Component {
                         id: aboutView
                         AboutView {
+                            orientationLock: PageOrientation.LockLandscape
                             appString: "Aura"
                             iconSource: "file:///opt/aura/share/icons/hicolor/" +
                             "64x64/apps/aura.png"
