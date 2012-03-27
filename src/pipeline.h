@@ -63,6 +63,7 @@ class Pipeline : public QObject
     void setZoom(const double value);
     void setColorFilter(const ControllerSettings::ColorFilter value);
     void setVideoEffect(const QString &value);
+    void setDevice(const ControllerSettings::Device value);
     void start();
     void stop();
     void prepare();

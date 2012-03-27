@@ -42,6 +42,7 @@
 #define VIDEO_RESOLUTION_DEFAULT  Pipeline::Low
 #define COLOR_FILTER_DEFAULT      ControllerSettings::Normal
 #define VIDEO_EFFECT_DEFAULT      "None"
+#define DEVICE_DEFAULT            ControllerSettings::Primary
 
 // pixel resolutions in video mode
 #define LOW_RES_WIDTH             320

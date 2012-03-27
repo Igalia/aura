@@ -33,6 +33,7 @@ class ControllerSettings : public QDeclarativeItem
 {
     Q_OBJECT
     Q_ENUMS(ColorFilter)
+    Q_ENUMS(Device)
 
  public:
     // colour filter values
@@ -45,6 +46,11 @@ class ControllerSettings : public QDeclarativeItem
         Vivid,
         ColorSwap,
         Solarize
+    };
+
+    enum Device {
+        Primary = 0,
+        Secondary
     };
 };
 

@@ -330,6 +330,13 @@ void Pipeline::setVideoEffect(const QString &value)
 
 }
 
+void Pipeline::setDevice(ControllerSettings::Device value)
+{
+    stop();
+    g_object_set(videoSrc, "camera-device", value, NULL);
+    start();
+}
+
 void Pipeline::setWindowId(int winId)
 {
     windowId = winId;

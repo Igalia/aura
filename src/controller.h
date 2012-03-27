@@ -49,6 +49,10 @@ class Controller : public QDeclarativeItem
                READ colorFilter
                WRITE setColorFilter
                NOTIFY colorFilterChanged)
+    Q_PROPERTY(ControllerSettings::Device device
+               READ device
+               WRITE setDevice
+               NOTIFY deviceChanged)
     Q_PROPERTY(QString savedFileName
                READ savedFileName
                NOTIFY savedFileNameChanged)
@@ -76,6 +80,7 @@ class Controller : public QDeclarativeItem
     double zoom() {return m_currentZoom;};
     ControllerSettings::ColorFilter colorFilter() {return m_currentColorFilter;};
     QString videoEffect() {return m_currentVideoEffect;};
+    ControllerSettings::Device device() {return m_currentDevice;};
 
     bool recording() { return m_recording; };
     QString savedFileName();
@@ -92,6 +97,7 @@ public slots:
     void setRecording(bool recording);
     void setVideoEffect(const QString &value);
     void setColorFilter(const ControllerSettings::ColorFilter value);
+    void setDevice(const ControllerSettings::Device value);
     void setPipelineStarting(bool pipelineStarting);
     void setPipelineReady(bool pipelineReady);
     void setRecordedTime(int recordedTime);
@@ -100,6 +106,7 @@ signals:
     void recordingChanged(bool recording);
     void videoEffectChanged(const QString &effectName);
     void colorFilterChanged(const ControllerSettings::ColorFilter value);
+    void deviceChanged(const ControllerSettings::Device value);
     void savedFileNameChanged(const QString &filename);
     void pipelineStartingChanged(bool pipelineStarting);
     void pipelineReadyChanged(bool pipelineReady);
@@ -123,5 +130,6 @@ signals:
     Pipeline::Resolution m_currentResolution;
     ControllerSettings::ColorFilter m_currentColorFilter;
     QString m_currentVideoEffect;
+    ControllerSettings::Device m_currentDevice;
 };
 #endif

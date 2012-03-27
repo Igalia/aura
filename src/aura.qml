@@ -169,7 +169,7 @@ PageStackWindow {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -129
                         verticalCenter: parent.top
-                        verticalCenterOffset: 130
+                        verticalCenterOffset: 125
                     }
                     enabled: controller.pipelineReady
                     visible: !controller.recording && !page.__dialogsVisible
@@ -190,8 +190,9 @@ PageStackWindow {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -80
                         verticalCenter: parent.verticalCenter
+                        verticalCenterOffset: -33
                     }
-                    height: 100
+                    height: 90
                     width: 100
                     iconSource: controller.recording ? "qrc:/resources/recording-icon.png" : "qrc:/resources/video-icon.png"
                     visible: !page.__dialogsVisible
@@ -199,6 +200,35 @@ PageStackWindow {
 
                     onClicked: {
                         controller.shutterClicked()
+                    }
+                }
+
+                Button {
+                    id: deviceConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    anchors {
+                        horizontalCenter: parent.right
+                        horizontalCenterOffset: -129
+                        verticalCenter: parent.bottom
+                        verticalCenterOffset: -190
+                    }
+                    height: 60
+                    width: 198
+                    text: controller.device ? "Secondary" : "Primary"
+                    visible: !controller.recording && !page.__dialogsVisible
+                    enabled: controller.pipelineReady
+                    onClicked: {
+                        if (controller.device)
+                           controller.device = 0
+                        else
+                           controller.device = 1
                     }
                 }
 
@@ -216,7 +246,7 @@ PageStackWindow {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -129
                         verticalCenter: parent.bottom
-                        verticalCenterOffset: -130
+                        verticalCenterOffset: -125
                     }
                     height: 60
                     width: 198
@@ -256,6 +286,7 @@ PageStackWindow {
                         horizontalCenter: parent.right
                         horizontalCenterOffset: -188
                         verticalCenter: parent.verticalCenter
+                        verticalCenterOffset: -33
                     }
                     source: "qrc:/resources/timer-bg.png"
                     Text {

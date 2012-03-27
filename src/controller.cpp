@@ -45,7 +45,8 @@ Controller::Controller(QDeclarativeItem *parent)
       m_currentZoom(ZOOM_DEFAULT),
       m_currentResolution(VIDEO_RESOLUTION_DEFAULT),
       m_currentColorFilter(COLOR_FILTER_DEFAULT),
-      m_currentVideoEffect(VIDEO_EFFECT_DEFAULT)
+      m_currentVideoEffect(VIDEO_EFFECT_DEFAULT),
+      m_currentDevice(DEVICE_DEFAULT)
 {
     setupEffects();
 
@@ -145,6 +146,21 @@ void Controller::setColorFilter(ControllerSettings::ColorFilter value)
         m_currentColorFilter = value;
         m_pipeline->setColorFilter(value);
         emit colorFilterChanged(value);
+    }
+}
+
+void Controller::setDevice(ControllerSettings::Device value)
+{
+    if (m_currentDevice != value) {
+        m_currentDevice = value;
+
+        // for the loading message to appear, as changing the device will
+        // stop the pipeline.
+        setPipelineStarting(true);
+        QCoreApplication::processEvents();
+
+        m_pipeline->setDevice(value);
+        emit deviceChanged(value);
     }
 }
 
