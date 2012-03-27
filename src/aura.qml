@@ -136,7 +136,7 @@ PageStackWindow {
                             email: "info@igalia.com"
                             twitterUrl: "https://twitter.com/#!/Igalia"
                             copyright: "Copyright © 2012 Igalia"
-                            recommendBody: ""
+                            storeUrl: "http://store.ovi.com/content/266783"
                             license:
                                 "This program is free software; you can " +
                                 "redistribute it and/or modify it under the " +
