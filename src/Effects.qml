@@ -112,7 +112,7 @@ Rectangle {
                         fontFamily: UIConstants.FONT_FAMILY
                     }
                     width: 198
-                    height: 60
+                    height: 50
                     property int effectIndex: index
                     property string effectName: effectNames[index]
                     text: effectName
@@ -139,7 +139,7 @@ Rectangle {
             fontFamily: UIConstants.FONT_FAMILY
         }
         width: 198
-        height: 60
+        height: 50
         text: "Accept"
         onClicked: {
             effectsPage.hide()

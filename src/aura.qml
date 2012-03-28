@@ -115,12 +115,12 @@ PageStackWindow {
                         fontFamily: UIConstants.FONT_FAMILY
                     }
                     anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -129
-                        verticalCenter: parent.top
-                        verticalCenterOffset: 60
+                        top: parent.top
+                        topMargin: 30
+                        right: parent.right
+                        rightMargin: 30
                     }
-                    height: 60
+                    height: 50
                     width: 198
                     text: "About"
                     enabled: controller.pipelineReady
@@ -169,10 +169,10 @@ PageStackWindow {
                 PostCapture {
                     id: postCapture
                     anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -129
-                        verticalCenter: parent.top
-                        verticalCenterOffset: 125
+                        top: about.bottom
+                        topMargin: 5
+                        right: parent.right
+                        rightMargin: 30
                     }
                     enabled: controller.pipelineReady && file != ""
                     visible: !controller.recording && !page.__dialogsVisible
@@ -191,10 +191,10 @@ PageStackWindow {
                         fontFamily: UIConstants.FONT_FAMILY
                     }
                     anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -80
-                        verticalCenter: parent.verticalCenter
-                        verticalCenterOffset: -33
+                        top: postCapture.bottom
+                        topMargin: 5
+                        right: parent.right
+                        rightMargin: 30
                     }
                     height: 90
                     width: 100
@@ -207,90 +207,12 @@ PageStackWindow {
                     }
                 }
 
-                Button {
-                    id: deviceConf
-                    platformStyle: ButtonStyle {
-                        background: "qrc:/resources/button-bg.png"
-                        disabledBackground: "qrc:/resources/button-bg.png"
-                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
-                        textColor: "white"
-                        fontPixelSize: UIConstants.FONT_DEFAULT
-                        fontFamily: UIConstants.FONT_FAMILY
-                    }
-                    anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -129
-                        verticalCenter: parent.bottom
-                        verticalCenterOffset: -190
-                    }
-                    height: 60
-                    width: 198
-                    text: controller.device ? "Secondary" : "Primary"
-                    visible: !controller.recording && !page.__dialogsVisible
-                    enabled: controller.pipelineReady
-                    onClicked: {
-                        if (controller.device)
-                           controller.device = 0
-                        else
-                           controller.device = 1
-                    }
-                }
-
-                Button {
-                    id: colorFilterConf
-                    platformStyle: ButtonStyle {
-                        background: "qrc:/resources/button-bg.png"
-                        disabledBackground: "qrc:/resources/button-bg.png"
-                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
-                        textColor: "white"
-                        fontPixelSize: UIConstants.FONT_DEFAULT
-                        fontFamily: UIConstants.FONT_FAMILY
-                    }
-                    anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -129
-                        verticalCenter: parent.bottom
-                        verticalCenterOffset: -125
-                    }
-                    height: 60
-                    width: 198
-                    text: colorFilters.effectNames[controller.colorFilter]
-                    visible: !page.__dialogsVisible
-                    enabled: controller.pipelineReady
-
-                    onClicked: colorFilters.show()
-                }
-
-                Button {
-                    id: filtersConf
-                    platformStyle: ButtonStyle {
-                        background: "qrc:/resources/button-bg.png"
-                        disabledBackground: "qrc:/resources/button-bg.png"
-                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
-                        textColor: "white"
-                        fontPixelSize: UIConstants.FONT_DEFAULT
-                        fontFamily: UIConstants.FONT_FAMILY
-                    }
-                    anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -129
-                        verticalCenter: parent.bottom
-                        verticalCenterOffset: -60
-                    }
-                    height: 60
-                    width: 198
-                    text: controller.videoEffect
-                    visible: !page.__dialogsVisible
-                    enabled: controller.pipelineReady
-                    onClicked: effects.show()
-                }
-
                 Image {
+                    id: timer
                     anchors {
-                        horizontalCenter: parent.right
-                        horizontalCenterOffset: -188
-                        verticalCenter: parent.verticalCenter
-                        verticalCenterOffset: -33
+                        top: postCapture.bottom
+                        topMargin: 5
+                        left: postCapture.left
                     }
                     source: "qrc:/resources/timer-bg.png"
                     Text {
@@ -305,6 +227,121 @@ PageStackWindow {
                         text: controller.recordedTime
                     }
                     visible: !page.__dialogsVisible
+                }
+
+                Text {
+                    id: deviceText
+                    anchors {
+                        left: deviceConf.left
+                        bottom: deviceConf.top
+                    }
+                    visible: !controller.recording && !page.__dialogsVisible
+                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.family: UIConstants.FONT_FAMILY
+                    color: "white"
+                    text: "Camera"
+                }
+
+                Button {
+                    id: deviceConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    anchors {
+                        right: parent.right
+                        rightMargin: 30
+                        bottom: colorFiltersText.top
+                    }
+                    height: 50
+                    width: 198
+                    text: controller.device ? "Secondary" : "Primary"
+                    visible: !controller.recording && !page.__dialogsVisible
+                    enabled: controller.pipelineReady
+                    onClicked: {
+                        if (controller.device)
+                           controller.device = 0
+                        else
+                           controller.device = 1
+                    }
+                }
+
+                Text {
+                    id: colorFiltersText
+                    anchors {
+                        left: colorFilterConf.left
+                        bottom: colorFilterConf.top
+                    }
+                    visible: !page.__dialogsVisible
+                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.family: UIConstants.FONT_FAMILY
+                    color: "white"
+                    text: "Color"
+                }
+
+                Button {
+                    id: colorFilterConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    anchors {
+                        right: parent.right
+                        rightMargin: 30
+                        bottom: filtersText.top
+                    }
+                    height: 50
+                    width: 198
+                    text: colorFilters.effectNames[controller.colorFilter]
+                    visible: !page.__dialogsVisible
+                    enabled: controller.pipelineReady
+
+                    onClicked: colorFilters.show()
+                }
+
+                Text {
+                    id: filtersText
+                    anchors {
+                        left: filtersConf.left
+                        bottom: filtersConf.top
+                    }
+                    visible: !page.__dialogsVisible
+                    font.pixelSize: UIConstants.FONT_DEFAULT
+                    font.family: UIConstants.FONT_FAMILY
+                    color: "white"
+                    text: "Effect"
+                }
+
+                Button {
+                    id: filtersConf
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/button-bg.png"
+                        disabledBackground: "qrc:/resources/button-bg.png"
+                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    anchors {
+                        right: parent.right
+                        rightMargin: 30
+                        bottom: parent.bottom
+                        bottomMargin: 30
+                    }
+                    height: 50
+                    width: 198
+                    text: controller.videoEffect
+                    visible: !page.__dialogsVisible
+                    enabled: controller.pipelineReady
+                    onClicked: effects.show()
                 }
             }
 
