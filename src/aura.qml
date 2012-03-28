@@ -242,31 +242,69 @@ PageStackWindow {
                     text: "Camera"
                 }
 
-                Button {
+                Rectangle {
                     id: deviceConf
-                    platformStyle: ButtonStyle {
-                        background: "qrc:/resources/button-bg.png"
-                        disabledBackground: "qrc:/resources/button-bg.png"
-                        pressedBackground: "qrc:/resources/button-bg-pressed.png"
-                        textColor: "white"
-                        fontPixelSize: UIConstants.FONT_DEFAULT
-                        fontFamily: UIConstants.FONT_FAMILY
-                    }
                     anchors {
                         right: parent.right
                         rightMargin: 30
                         bottom: colorFiltersText.top
                     }
-                    height: 50
+                    color: "transparent"
+                    height: 40
                     width: 198
-                    text: controller.device ? "Secondary" : "Primary"
                     visible: !controller.recording && !page.__dialogsVisible
-                    enabled: controller.pipelineReady
-                    onClicked: {
-                        if (controller.device)
-                           controller.device = 0
-                        else
-                           controller.device = 1
+
+                    Text {
+                        id: back
+                        anchors {
+                            left: parent.left
+                            verticalCenter: parent.verticalCenter
+                        }
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.family: UIConstants.FONT_FAMILY
+                        color: "white"
+                        text: "Back"
+                    }
+
+                    Text {
+                        id: front
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                        }
+                        font.pixelSize: UIConstants.FONT_DEFAULT
+                        font.family: UIConstants.FONT_FAMILY
+                        color: "white"
+                        text: "Front"
+                    }
+
+                    MouseArea {
+                        id: deviceSwitch
+                        anchors {
+                            left: back.right
+                            right: front.left
+                            verticalCenter: parent.verticalCenter
+                        }
+                        height: 50
+                        enabled: controller.pipelineReady
+                        Image {
+                            anchors.centerIn: parent
+                            source: "qrc:/resources/switch-bg.png"
+                        }
+                        Image {
+                            anchors {
+                                verticalCenter: parent.verticalCenter
+                                horizontalCenter: parent.horizontalCenter
+                                horizontalCenterOffset: controller.device ? 15 : -15
+                            }
+                            source: deviceSwitch.pressed ? "qrc:/resources/switch-handle-pressed.png" : "qrc:/resources/switch-handle.png"
+                        }
+                        onClicked: {
+                            if (controller.device)
+                               controller.device = 0
+                            else
+                               controller.device = 1
+                        }
                     }
                 }
 

@@ -16,5 +16,8 @@
         <file>resources/video-icon.png</file>
         <file>resources/recording-icon.png</file>
         <file>resources/round-corners-shadow.png</file>
+        <file>resources/switch-bg.png</file>
+        <file>resources/switch-handle.png</file>
+        <file>resources/switch-handle-pressed.png</file>
     </qresource>
 </RCC>
