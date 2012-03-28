@@ -1,0 +1,26 @@
+body {
+color: #839496;
+background-color: #002b36;
+}
+
+#container { 
+margin-left:auto;
+margin-right:auto;
+width: 70%;
+}
+
+h1 { text-align: center; }
+
+a {
+color: inherit;
+background-color: inherit;
+font: inherit;
+text-decoration: underline;
+}
+
+img.screenshot { width: 256px; }
+
+table.gallery { 
+margin-left:auto;
+margin-right:auto;
+}
