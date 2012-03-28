@@ -61,9 +61,9 @@ binary-indep: install
 binary-arch: install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
+#	dh_installchangelogs
+#	dh_installdocs
+#	dh_installexamples
 #	dh_install
 #	dh_installmenu
 #	dh_installdebconf
@@ -75,7 +75,7 @@ binary-arch: install
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
-	dh_installman
+#	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
