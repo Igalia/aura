@@ -126,7 +126,10 @@ PageStackWindow {
                     enabled: controller.pipelineReady
                     visible: !controller.recording && !page.__dialogsVisible
 
-                    onClicked: appWindow.pageStack.push(aboutView)
+                    onClicked: {
+                        controller.pausePipeline()
+                        appWindow.pageStack.push(aboutView)
+                    }
 
                     Component {
                         id: aboutView
@@ -162,6 +165,11 @@ PageStackWindow {
                                 "this program. If not, see " +
                                 "<a href=\"http://www.gnu.org/licenses\">" +
                                 "http://www.gnu.org/licenses</a><br/><br/>"
+                            onStatusChanged: {
+                                if (status == PageStatus.Inactive) {
+                                    controller.startPipeline()
+                                }
+                            }
                         }
                     }
                 }
