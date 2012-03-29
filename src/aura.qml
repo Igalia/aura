@@ -52,6 +52,7 @@ PageStackWindow {
 
         property bool windowActive : platformWindow.active
         property bool __dialogsVisible: effects.visible || colorFilters.visible
+        property bool __aboutVisible: false
 
         Item {
             id: mainPage
@@ -61,10 +62,10 @@ PageStackWindow {
                 target: platformWindow
 
                 onActiveChanged: {
-                    if (platformWindow.active) {
-                        controller.startPipeline()
-                    } else {
+                    if (!platformWindow.active) {
                         controller.stopPipeline()
+                    } else if (!page.__aboutVisible) {
+                        controller.startPipeline()
                     }
                 }
             }
@@ -169,6 +170,11 @@ PageStackWindow {
                                 if (status == PageStatus.Inactive) {
                                     controller.startPipeline()
                                 }
+                            }
+                            Binding {
+                                target: page
+                                property: "__aboutVisible"
+                                value: status == PageStatus.Active || status == PageStatus.Activating
                             }
                         }
                     }
