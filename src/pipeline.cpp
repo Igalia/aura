@@ -399,8 +399,16 @@ void Pipeline::handleBusMessage(GstMessage *message)
                 qDebug() << Q_FUNC_INFO << gst_element_state_get_name(oldstate)
                          << "->" << gst_element_state_get_name(newstate) << "=>"
                          << gst_element_state_get_name(pending);
-                if (newstate==GST_STATE_PLAYING) {
+
+                GstStateChange stateTransition =
+                    GST_STATE_TRANSITION(oldstate, newstate);
+
+                switch (stateTransition) {
+                case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
                     QMetaObject::invokeMethod(this, "pipelinePlaying", Qt::QueuedConnection);
+                    break;
+                default:
+                    break;
                 }
             }
             break;
