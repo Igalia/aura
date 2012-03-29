@@ -197,6 +197,11 @@ void Pipeline::stop()
     gst_element_set_state(camerabin, GST_STATE_NULL);
 }
 
+void Pipeline::pause()
+{
+    gst_element_set_state(camerabin, GST_STATE_PAUSED);
+}
+
 void Pipeline::prepare()
 {
     gst_element_set_state(camerabin, GST_STATE_READY);
@@ -391,6 +396,9 @@ void Pipeline::handleBusMessage(GstMessage *message)
             if (GST_ELEMENT(GST_MESSAGE_SRC(message)) == camerabin) {
                 GstState oldstate, newstate, pending;
                 gst_message_parse_state_changed(message, &oldstate, &newstate, &pending);
+                qDebug() << Q_FUNC_INFO << gst_element_state_get_name(oldstate)
+                         << "->" << gst_element_state_get_name(newstate) << "=>"
+                         << gst_element_state_get_name(pending);
                 if (newstate==GST_STATE_PLAYING) {
                     QMetaObject::invokeMethod(this, "pipelinePlaying", Qt::QueuedConnection);
                 }

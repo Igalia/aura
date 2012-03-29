@@ -66,6 +66,7 @@ class Pipeline : public QObject
     void setDevice(const ControllerSettings::Device value);
     void start();
     void stop();
+    void pause();
     void prepare();
     void startRecording();
     void stopRecording();

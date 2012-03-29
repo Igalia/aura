@@ -91,6 +91,7 @@ class Controller : public QDeclarativeItem
 public slots:
     void startPipeline();
     void stopPipeline();
+    void pausePipeline();
     void startRecording();
     void stopRecording();
     void shutterClicked();

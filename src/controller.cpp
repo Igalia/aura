@@ -88,6 +88,12 @@ void Controller::stopPipeline()
     ResourceManager::instance()->releaseResources();
 }
 
+void Controller::pausePipeline()
+{
+    m_pipeline->pause();
+    setPipelineReady(false);
+}
+
 void Controller::setupEffects()
 {
     EffectManager::setup(this);
