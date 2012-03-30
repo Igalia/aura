@@ -38,8 +38,8 @@ ResourceManager* ResourceManager::instance()
     return instancePointer;
 }
 
-ResourceManager::ResourceManager(QObject *parent)
-    : QObject(parent),
+ResourceManager::ResourceManager()
+    : QObject(),
       resources(0),
       result(false),
       waiting(false)

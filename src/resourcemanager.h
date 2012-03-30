@@ -47,7 +47,7 @@ private slots:
     void granted();
 
 private:
-    ResourceManager(QObject *parent = 0);
+    ResourceManager();
 
     ResourcePolicy::ResourceSet *resources;
     bool result;
