@@ -48,6 +48,9 @@ private slots:
 
 private:
     ResourceManager();
+    int addAudioResources();
+    int removeAudioResources();
+    bool isVideoGranted() const;
 
     ResourcePolicy::ResourceSet *m_resources;
     bool m_result;

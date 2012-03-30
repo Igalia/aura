@@ -107,6 +107,47 @@ bool ResourceManager::releaseResources()
     return true;
 }
 
+int ResourceManager::addAudioResources()
+{
+    int toAdd = 0;
+
+    // The audio resources are optional, because otherwise we would
+    // transition from viewfinder to standby if they do not get
+    // acquired. We want to return to video viewfinder.
+
+    if (false == m_resources->contains(ResourcePolicy::AudioRecorderType)) {
+        ResourcePolicy::AudioRecorderResource *audioRecorderResource =
+            new ResourcePolicy::AudioRecorderResource;
+        audioRecorderResource->setOptional(true);
+        m_resources->addResourceObject(audioRecorderResource);
+        ++toAdd;
+    }
+
+    return toAdd;
+}
+
+int ResourceManager::removeAudioResources()
+{
+    int toDelete = 0;
+
+    if (m_resources->contains(ResourcePolicy::AudioRecorderType)) {
+        m_resources->deleteResource(ResourcePolicy::AudioRecorderType);
+        ++toDelete;
+    }
+
+    return toDelete;
+}
+
+bool ResourceManager::isVideoGranted() const
+{
+    if (m_resources->resource(ResourcePolicy::VideoRecorderType)->isGranted() &&
+        m_resources->resource(ResourcePolicy::VideoPlaybackType)->isGranted()) {
+        return true;
+    }
+
+    return false;
+}
+
 void ResourceManager::denied()
 {
     m_result = false;
