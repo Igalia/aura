@@ -52,8 +52,8 @@ ResourceManager::ResourceManager()
                                                 this);
     m_resources->setAlwaysReply();
 
-    // resources needed while not in capture
     m_resources->addResource(ResourcePolicy::VideoPlaybackType);
+    m_resources->addResource(ResourcePolicy::VideoRecorderType);
 
     QObject::connect(m_resources, SIGNAL(resourcesDenied()),
                      this, SLOT(denied()));
@@ -69,9 +69,15 @@ bool ResourceManager::acquirePlaybackResources()
     m_result = false;
     m_waiting = true;
 
-    // remove the recording resources just in case they were requested
-    m_resources->deleteResource(ResourcePolicy::VideoRecorderType);
-    m_resources->deleteResource(ResourcePolicy::AudioRecorderType);
+    bool hasVideo = isVideoGranted();
+    int toRemove = removeAudioResources();
+
+    if (true == hasVideo &&
+        0 == toRemove) {
+        // No changes.
+        m_result = true;
+        return m_result;
+    }
 
     m_resources->update();
     m_resources->acquire();
@@ -88,8 +94,15 @@ bool ResourceManager::acquireRecordingResources()
     m_result = false;
     m_waiting = true;
 
-    m_resources->addResource(ResourcePolicy::VideoRecorderType);
-    m_resources->addResource(ResourcePolicy::AudioRecorderType);
+    bool hasVideo = isVideoGranted();
+    int toAdd = addAudioResources();
+
+    if (true == hasVideo &&
+        0 == toAdd) {
+        // No changes.
+        m_result = true;
+        return m_result;
+    }
 
     m_resources->update();
     m_resources->acquire();
