@@ -1,3 +1,11 @@
+aura (0.1.1) unstable; urgency=low
+
+  * Fix race condition when the resources are lost
+  * Revert a commit that stopped the pipeline after 10 seconds
+  * Small clean up of the resource manager
+
+ -- Víctor Manuel Jáquez Leal <vjaquez@igalia.com>  Fri, 30 Mar 2012 20:18:22 +0200
+
 aura (0.1.0) unstable; urgency=low
 
   * Initial public release
