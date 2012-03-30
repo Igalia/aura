@@ -72,7 +72,7 @@ Page {
     onStoreUrlChanged: modelSetValues()
     onTwitterUrlChanged: modelSetValues()
     onPublisherUrlChanged: modelSetValues()
-    onWebsiteUrlChanged: modelSetValued()
+    onWebsiteUrlChanged: modelSetValues()
 
     function modelSetValues() {
         console.debug("modelSetValues()")
