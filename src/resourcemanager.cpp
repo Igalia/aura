@@ -169,6 +169,8 @@ void ResourceManager::denied()
 
 void ResourceManager::lost()
 {
+    m_result = false;
+
     emit resourcesLost();
 }
 
