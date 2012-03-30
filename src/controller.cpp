@@ -83,9 +83,29 @@ void Controller::startPipeline()
 
 void Controller::stopPipeline()
 {
-    m_pipeline->stop();
-    setPipelineReady(false);
-    ResourceManager::instance()->releaseResources();
+    if (!m_pipeline->isIdle()) {
+        // Pipeline is recording. Stop the recording and delay stopping
+        // the pipeline until the recording is finished
+        connect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(delayedPipelineStop(bool)));
+        m_recordingTimer.stop();
+        m_pipeline->stopRecording();
+    } else {
+        m_pipeline->stop();
+        setPipelineReady(false);
+        ResourceManager::instance()->releaseResources();
+    }
+}
+
+void Controller::delayedPipelineStop(bool idle)
+{
+    disconnect(m_pipeline, SIGNAL(idleChanged(bool)), this, SLOT(delayedPipelineStop(bool)));
+
+    if (idle) {
+        // the pipeline is not recording so we can safely call stopRecording()
+        stopRecording();
+    } else {
+        qCritical() << "Something went wrong when stopping the recording";
+    }
 }
 
 void Controller::pausePipeline()
@@ -183,7 +203,6 @@ void Controller::setVideoEffect(const QString &value)
 void Controller::resourcesLost()
 {
     qCritical() << "Some resource was lost or denied, stopping recording and pipeline";
-    stopRecording();
     stopPipeline();
 }
 

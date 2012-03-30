@@ -102,6 +102,7 @@ public slots:
     void setPipelineStarting(bool pipelineStarting);
     void setPipelineReady(bool pipelineReady);
     void setRecordedTime(int recordedTime);
+    void delayedPipelineStop(bool idle);
 
 signals:
     void recordingChanged(bool recording);
