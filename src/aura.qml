@@ -52,7 +52,6 @@ PageStackWindow {
 
         property bool windowActive : platformWindow.active
         property bool __dialogsVisible: effects.visible || colorFilters.visible
-        property bool __aboutVisible: false
 
         Item {
             id: mainPage
@@ -64,7 +63,7 @@ PageStackWindow {
                 onActiveChanged: {
                     if (!platformWindow.active) {
                         controller.stopPipeline()
-                    } else if (!page.__aboutVisible) {
+                    } else if (!aboutView.visible) {
                         controller.startPipeline()
                     }
                 }
@@ -124,58 +123,57 @@ PageStackWindow {
                     height: 50
                     width: 198
                     text: "About"
-                    enabled: controller.pipelineReady
+                    enabled: controller.pipelineReady || aboutView.visible
                     visible: !controller.recording && !page.__dialogsVisible
+                    onClicked: aboutView.visible = !aboutView.visible
+                }
 
-                    onClicked: {
-                        controller.pausePipeline()
-                        appWindow.pageStack.push(aboutView)
+                AboutView {
+                    id: aboutView
+                    visible: false
+                    anchors {
+                        horizontalCenter: parent.horizontalCenter
+                        horizontalCenterOffset: -114
+                        verticalCenter: parent.verticalCenter
                     }
+                    width: 560
+                    height: 420
+                    clip: true
 
-                    Component {
-                        id: aboutView
-                        AboutView {
-                            orientationLock: PageOrientation.LockLandscape
-                            appString: "Aura"
-                            iconSource: "file:///opt/aura/share/icons/hicolor/" +
-                            "64x64/apps/aura.png"
-                            email: "info@igalia.com"
-                            twitterUrl: "https://twitter.com/#!/Igalia"
-                            copyright: "Copyright © 2012 Igalia"
-                            storeUrl: "http://store.ovi.com/content/266783"
-                            websiteUrl: "http://www.igalia.com"
-                            license:
-                                "This program is free software; you can " +
-                                "redistribute it and/or modify it under the " +
-                                "terms of the GNU Lesser General Public " +
-                                "License as published by the Free Software " +
-                                "Foundation; version 2.1 of the License, or " +
-                                "(at your option) any later version." +
-                                "<br/><br/>" +
+                    appString: "Aura"
+                    iconSource: "file:///opt/aura/share/icons/hicolor/" +
+                        "64x64/apps/aura.png"
+                    email: "info@igalia.com"
+                    twitterUrl: "https://twitter.com/#!/Igalia"
+                    copyright: "Copyright © 2012 Igalia"
+                    storeUrl: "http://store.ovi.com/content/266783"
+                    websiteUrl: "http://www.igalia.com"
+                    license:
+                        "This program is free software; you can redistribute " +
+                        "it and/or modify it under the terms of the GNU " +
+                        "Lesser General Public License as published by the " +
+                        "Free Software Foundation; version 2.1 of the " +
+                        "License, or (at your option) any later version." +
+                        "<br/><br/>" +
 
-                                "This program is distributed in the hope " +
-                                "that it will be useful, but WITHOUT ANY " +
-                                "WARRANTY; without even the implied warranty " +
-                                "of MERCHANTABILITY or FITNESS FOR A " +
-                                "PARTICULAR PURPOSE. See the GNU Lesser " +
-                                "General Public License for more details." +
-                                "<br/><br/>" +
+                        "This program is distributed in the hope that it " +
+                        "will be useful, but WITHOUT ANY WARRANTY; without " +
+                        "even the implied warranty of MERCHANTABILITY or " +
+                        "FITNESS FOR A PARTICULAR PURPOSE. See the GNU " +
+                        "Lesser General Public License for more details." +
+                        "<br/><br/>" +
 
-                                "You should have received a copy of the GNU " +
-                                "Lesser General Public License along with " +
-                                "this program. If not, see " +
-                                "<a href=\"http://www.gnu.org/licenses\">" +
-                                "http://www.gnu.org/licenses</a><br/><br/>"
-                            onStatusChanged: {
-                                if (status == PageStatus.Inactive) {
-                                    controller.startPipeline()
-                                }
-                            }
-                            Binding {
-                                target: page
-                                property: "__aboutVisible"
-                                value: status == PageStatus.Active || status == PageStatus.Activating
-                            }
+                        "You should have received a copy of the GNU Lesser " +
+                        "General Public License along with this program. If " +
+                        "not, see " +
+                        "<a href=\"http://www.gnu.org/licenses\">" +
+                        "http://www.gnu.org/licenses</a><br/><br/>"
+
+                    onVisibleChanged: {
+                        if (visible) {
+                            controller.pausePipeline()
+                        } else {
+                            controller.startPipeline()
                         }
                     }
                 }

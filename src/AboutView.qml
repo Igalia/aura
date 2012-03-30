@@ -30,7 +30,7 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.1
 import "file:///usr/lib/qt4/imports/com/meego/UIConstants.js" as UIConstants
 
-Page {
+Item {
     id: page
 
     property string license: 'This program is free software: you can redistribute it and/or modify ' +
@@ -77,14 +77,6 @@ Page {
     function modelSetValues() {
         console.debug("modelSetValues()")
         aboutOptions.setValues()
-    }
-
-    tools: ToolBarLayout {
-        ToolIcon {
-            id: backIcon
-            iconId: 'toolbar-back'
-            onClicked: pageStack.pop()
-        }
     }
 
     ListModel {
