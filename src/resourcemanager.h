@@ -51,6 +51,7 @@ private:
     int addAudioResources();
     int removeAudioResources();
     bool isVideoGranted() const;
+    void updateAndAcquire();
 
     ResourcePolicy::ResourceSet *m_resources;
     bool m_result;

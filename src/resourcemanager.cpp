@@ -67,7 +67,6 @@ ResourceManager::ResourceManager()
 bool ResourceManager::acquirePlaybackResources()
 {
     m_result = false;
-    m_waiting = true;
 
     bool hasVideo = isVideoGranted();
     int toRemove = removeAudioResources();
@@ -79,12 +78,7 @@ bool ResourceManager::acquirePlaybackResources()
         return m_result;
     }
 
-    m_resources->update();
-    m_resources->acquire();
-
-    while (m_waiting) {
-        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    }
+    updateAndAcquire();
 
     return m_result;
 }
@@ -92,7 +86,6 @@ bool ResourceManager::acquirePlaybackResources()
 bool ResourceManager::acquireRecordingResources()
 {
     m_result = false;
-    m_waiting = true;
 
     bool hasVideo = isVideoGranted();
     int toAdd = addAudioResources();
@@ -104,12 +97,7 @@ bool ResourceManager::acquireRecordingResources()
         return m_result;
     }
 
-    m_resources->update();
-    m_resources->acquire();
-
-    while (m_waiting) {
-        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
-    }
+    updateAndAcquire();
 
     return m_result;
 }
@@ -159,6 +147,18 @@ bool ResourceManager::isVideoGranted() const
     }
 
     return false;
+}
+
+void ResourceManager::updateAndAcquire()
+{
+    m_waiting = true;
+
+    m_resources->update();
+    m_resources->acquire();
+
+    while (m_waiting) {
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+    }
 }
 
 void ResourceManager::denied()
