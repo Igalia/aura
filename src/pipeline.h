@@ -29,7 +29,6 @@
 
 #include <QObject>
 #include <QSystemDeviceInfo>
-#include <QTimer>
 #include "settings.h"
 #include "controller-settings.h"
 #include <gst/gst.h>
@@ -66,6 +65,7 @@ class Pipeline : public QObject
     void setVideoEffect(const QString &value);
     void setDevice(const ControllerSettings::Device value);
     void start();
+    void stop();
     void pause();
     void prepare();
     void startRecording();
@@ -79,9 +79,6 @@ class Pipeline : public QObject
     void idleChanged(bool isIdle);
     void savedFileNameChanged(const QString &filename);
     void pipelinePlaying();
-
- public slots:
-    void stop();
 
  private:
     QString nextFileName();
@@ -103,6 +100,5 @@ class Pipeline : public QObject
     int windowId;
     QSystemDeviceInfo systemInfo;
     QString currentFile;
-    QTimer idleTimer;
 };
 #endif

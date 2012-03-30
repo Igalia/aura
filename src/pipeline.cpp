@@ -36,8 +36,6 @@
 #include <gst/pbutils/encoding-profile.h>
 #include <gst/pbutils/encoding-target.h>
 
-static const int IDLE_MSECS = 10000;
-
 static GstBusSyncReply
 busSyncHandler(GstBus *bus, GstMessage *message, gpointer data)
 {
@@ -161,9 +159,6 @@ Pipeline::Pipeline(QObject *parent)
     setupFileStorage();
     setupEffectBins();
     setResolution(VIDEO_RESOLUTION_DEFAULT);
-
-    idleTimer.setInterval(IDLE_MSECS);
-    connect(&idleTimer, SIGNAL(timeout()), this, SLOT(stop()));
 }
 
 Pipeline::~Pipeline()
@@ -194,13 +189,11 @@ void Pipeline::setupFileStorage()
 
 void Pipeline::start()
 {
-    idleTimer.stop();
     gst_element_set_state(camerabin, GST_STATE_PLAYING);
 }
 
 void Pipeline::stop()
 {
-    idleTimer.stop();
     gst_element_set_state(camerabin, GST_STATE_NULL);
 }
 
@@ -413,9 +406,6 @@ void Pipeline::handleBusMessage(GstMessage *message)
                 switch (stateTransition) {
                 case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
                     QMetaObject::invokeMethod(this, "pipelinePlaying", Qt::QueuedConnection);
-                    break;
-                case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
-                    idleTimer.start();
                     break;
                 default:
                     break;
