@@ -49,9 +49,9 @@ private slots:
 private:
     ResourceManager();
 
-    ResourcePolicy::ResourceSet *resources;
-    bool result;
-    bool waiting;
+    ResourcePolicy::ResourceSet *m_resources;
+    bool m_result;
+    bool m_waiting;
 
 };
 #endif

@@ -40,77 +40,77 @@ ResourceManager* ResourceManager::instance()
 
 ResourceManager::ResourceManager()
     : QObject(),
-      resources(0),
-      result(false),
-      waiting(false)
+      m_resources(0),
+      m_result(false),
+      m_waiting(false)
 {
     qRegisterMetaType<ResourcePolicy::ResourceSet*>("ResourcePolicy::ResourceSet*");
     qRegisterMetaType<ResourcePolicy::ResourceType>("ResourcePolicy::ResourceType");
     qRegisterMetaType<QList<ResourcePolicy::ResourceType> >("QList<ResourcePolicy::ResourceType>");
 
-    resources = new ResourcePolicy::ResourceSet(QString::fromAscii("camera"),
+    m_resources = new ResourcePolicy::ResourceSet(QString::fromAscii("camera"),
                                                 this);
-    resources->setAlwaysReply();
+    m_resources->setAlwaysReply();
 
     // resources needed while not in capture
-    resources->addResource(ResourcePolicy::VideoPlaybackType);
-    resources->addResource(ResourcePolicy::ScaleButtonType);
+    m_resources->addResource(ResourcePolicy::VideoPlaybackType);
 
-    QObject::connect(resources, SIGNAL(resourcesDenied()),
+    QObject::connect(m_resources, SIGNAL(resourcesDenied()),
                      this, SLOT(denied()));
-    QObject::connect(resources, SIGNAL(lostResources()),
+    QObject::connect(m_resources, SIGNAL(lostResources()),
                      this, SLOT(lost()));
-    QObject::connect(resources, SIGNAL(resourcesGranted(QList<ResourcePolicy::ResourceType>)),
+    QObject::connect(m_resources,
+                     SIGNAL(resourcesGranted(QList<ResourcePolicy::ResourceType>)),
                      this, SLOT(granted()));
 }
 
 bool ResourceManager::acquirePlaybackResources()
 {
-    result = false;
-    waiting = true;
+    m_result = false;
+    m_waiting = true;
 
     // remove the recording resources just in case they were requested
-    resources->deleteResource(ResourcePolicy::VideoRecorderType);
-    resources->deleteResource(ResourcePolicy::AudioRecorderType);
+    m_resources->deleteResource(ResourcePolicy::VideoRecorderType);
+    m_resources->deleteResource(ResourcePolicy::AudioRecorderType);
 
-    resources->update();
-    resources->acquire();
+    m_resources->update();
+    m_resources->acquire();
 
-    while (waiting) {
+    while (m_waiting) {
         QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     }
 
-    return result;
+    return m_result;
 }
 
 bool ResourceManager::acquireRecordingResources()
 {
-    result = false;
-    waiting = true;
+    m_result = false;
+    m_waiting = true;
 
-    resources->addResource(ResourcePolicy::VideoRecorderType);
-    resources->addResource(ResourcePolicy::AudioRecorderType);
+    m_resources->addResource(ResourcePolicy::VideoRecorderType);
+    m_resources->addResource(ResourcePolicy::AudioRecorderType);
 
-    resources->update();
-    resources->acquire();
+    m_resources->update();
+    m_resources->acquire();
 
-    while (waiting) {
+    while (m_waiting) {
         QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     }
 
-    return result;
+    return m_result;
 }
 
 bool ResourceManager::releaseResources()
 {
-    resources->release();
+    m_resources->release();
     return true;
 }
 
 void ResourceManager::denied()
 {
-    result = false;
-    waiting = false;
+    m_result = false;
+    m_waiting = false;
 }
 
 void ResourceManager::lost()
@@ -120,6 +120,6 @@ void ResourceManager::lost()
 
 void ResourceManager::granted()
 {
-    result = true;
-    waiting = false;
+    m_result = true;
+    m_waiting = false;
 }
