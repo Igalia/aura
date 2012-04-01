@@ -133,7 +133,7 @@ PageStackWindow {
                     visible: false
                     anchors {
                         horizontalCenter: parent.horizontalCenter
-                        horizontalCenterOffset: -114
+                        horizontalCenterOffset: -115
                         verticalCenter: parent.verticalCenter
                     }
                     width: 560

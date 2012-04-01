@@ -59,6 +59,7 @@ Item {
     property string websiteUrl: ''
     property string copyright: ''
     property string disclaimer: ''
+    property color backgroundColor: '#080808'
 
     property int __numItems: 0
 
@@ -183,6 +184,13 @@ Item {
         }
     }
 
+    Rectangle {
+        id: fullBackgroundRectangle
+        anchors.fill: parent
+        radius: 30
+        color: backgroundColor
+    }
+
     Flickable {
         id: flick
         clip: true
@@ -213,13 +221,13 @@ Item {
                 platformStyle: LabelStyle {
                     fontPixelSize: UIConstants.FONT_XLARGE
                 }
-                color: UIConstants.COLOR_FOREGROUND
+                color: UIConstants.COLOR_BACKGROUND
             }
 
             Rectangle {
                 width: parent.width
                 height: __numItems * UIConstants.LIST_ITEM_HEIGHT_SMALL
-                color: 'white'
+                color: backgroundColor
 
                 Column {
                     id: subcolumn
@@ -238,7 +246,7 @@ Item {
                             BorderImage {
                                 anchors.fill: parent
                                 visible: mouseArea.pressed
-                                source: 'image://theme/meegotouch-list-fullwidth-background-pressed-vertical-center'
+                                source: 'image://theme/meegotouch-list-fullwidth-inverted-background-pressed-vertical-center'
                             }
 
                             Label {
@@ -250,6 +258,7 @@ Item {
                                 platformStyle: LabelStyle {
                                     fontPixelSize: UIConstants.FONT_SLARGE
                                 }
+                                color: UIConstants.COLOR_BACKGROUND
                                 text: model.title
                             }
 
@@ -259,6 +268,7 @@ Item {
                                     rightMargin: UIConstants.DEFAULT_MARGIN
                                     verticalCenter: parent.verticalCenter
                                 }
+                                source: "image://theme/icon-m-common-drilldown-arrow-inverse"
                             }
 
                             Rectangle {
@@ -284,12 +294,13 @@ Item {
                     }
                 }
 
-                BorderImage {
-                    id: border
-                    source: 'qrc:/resources/round-corners-shadow.png'
+                Rectangle {
+                    id: borderRectangle
                     anchors.fill: parent
-                    border.left: 18; border.top: 18
-                    border.right: 18; border.bottom: 18
+                    border.color: 'grey'
+                    border.width: 2
+                    color: 'transparent'
+                    radius: 20
                 }
             }
 
@@ -302,7 +313,7 @@ Item {
                     fontPixelSize: UIConstants.FONT_LSMALL
                     fontFamily: UIConstants.FONT_FAMILY_LIGHT
                 }
-                color: UIConstants.COLOR_FOREGROUND
+                color: UIConstants.COLOR_BACKGROUND
                 visible: copyright != ''
             }
 
@@ -315,7 +326,7 @@ Item {
                     fontPixelSize: UIConstants.FONT_LSMALL
                     fontFamily: UIConstants.FONT_FAMILY_LIGHT
                 }
-                color: UIConstants.COLOR_FOREGROUND
+                color: UIConstants.COLOR_BACKGROUND
                 onLinkActivated: Qt.openUrlExternally(link)
                 visible: disclaimer != ''
             }
@@ -323,6 +334,7 @@ Item {
             Button {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: 'License'
+                platformStyle: ButtonStyle { inverted: true }
                 onClicked: licenseDialog.open()
             }
         }
@@ -332,10 +344,5 @@ Item {
         id: licenseDialog
         message: license
         acceptButtonText: 'OK'
-    }
-
-    ScrollDecorator {
-        flickableItem: flick
-        anchors.rightMargin: -UIConstants.DEFAULT_MARGIN
     }
 }
