@@ -52,6 +52,8 @@ PageStackWindow {
 
         property bool windowActive : platformWindow.active
         property bool __dialogsVisible: effects.visible || colorFilters.visible
+        property real __dimmedOpacity: 0.3
+        property int __animationDuration: 50
 
         Item {
             id: mainPage
@@ -189,7 +191,8 @@ PageStackWindow {
                     enabled: controller.pipelineReady && file != ""
                     visible: !controller.recording && !page.__dialogsVisible
                     onClicked: controller.stopPipeline()
-                    opacity: enabled ? 1 : 0.3
+                    opacity: enabled ? 1 : page.__dimmedOpacity
+                    Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
                 }
 
                 Button {
@@ -213,6 +216,8 @@ PageStackWindow {
                     iconSource: controller.recording ? "qrc:/resources/recording-icon.png" : "qrc:/resources/video-icon.png"
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
+                    opacity: enabled ? 1 : page.__dimmedOpacity
+                    Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
 
                     onClicked: {
                         controller.shutterClicked()
@@ -299,6 +304,8 @@ PageStackWindow {
                         }
                         height: 50
                         enabled: controller.pipelineReady
+                        opacity: enabled ? 1 : page.__dimmedOpacity
+                        Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
                         Image {
                             anchors.centerIn: parent
                             source: "qrc:/resources/switch-bg.png"
@@ -353,6 +360,8 @@ PageStackWindow {
                     text: colorFilters.effectNames[controller.colorFilter]
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
+                    opacity: enabled ? 1 : page.__dimmedOpacity
+                    Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
 
                     onClicked: colorFilters.show()
                 }
@@ -391,6 +400,8 @@ PageStackWindow {
                     text: controller.videoEffect
                     visible: !page.__dialogsVisible
                     enabled: controller.pipelineReady
+                    opacity: enabled ? 1 : page.__dimmedOpacity
+                    Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
                     onClicked: effects.show()
                 }
             }
