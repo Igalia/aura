@@ -1,3 +1,9 @@
+aura (0.1.2) unstable; urgency=low
+
+  * Converted AboutView in an item and embedded it in the viewfinder
+
+ -- Víctor Manuel Jáquez Leal <vjaquez@igalia.com>  Tue, 03 Apr 2012 10:34:48 +0200
+
 aura (0.1.1) unstable; urgency=low
 
   * Fix race condition when the resources are lost
