@@ -6,6 +6,7 @@
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Michele Tameni <michele@tameni.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -141,6 +142,16 @@ void Controller::stopRecording()
     }
 }
 
+void Controller::captureImage()
+{
+    if (ResourceManager::instance()->acquireRecordingResources()) {
+        m_pipeline->captureImage();
+    } else {
+        qCritical() << "Recording resources denied";
+        resourcesLost();
+    }
+}
+
 void Controller::shutterClicked()
 {
     if (!m_recording) {
@@ -148,6 +159,11 @@ void Controller::shutterClicked()
     } else {
         stopRecording();
     }
+}
+
+void Controller::cameraShutterClicked()
+{
+    captureImage();
 }
 
 void Controller::setResolution(Pipeline::Resolution value)

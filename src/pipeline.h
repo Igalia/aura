@@ -6,6 +6,7 @@
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Michele Tameni <michele@tameni.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -58,6 +59,7 @@ class Pipeline : public QObject
     Pipeline(QObject *parent = 0);
     ~Pipeline();
     void setupFileStorage();
+    void setCameraMode();
     void setVideoMode();
     void setResolution(const Resolution value);
     void setZoom(const double value);
@@ -70,6 +72,7 @@ class Pipeline : public QObject
     void prepare();
     void startRecording();
     void stopRecording();
+    void captureImage();
     void setWindowId(int winId);
     void handleBusMessage(GstMessage *message);
     bool isIdle();
@@ -84,7 +87,6 @@ class Pipeline : public QObject
     QString nextFileName();
     void setupEffectBins();
     void writeMetadata();
-
     GstElement *camerabin;
     GstElement *videoSrc;
     GstElement *viewfinder;
@@ -100,5 +102,12 @@ class Pipeline : public QObject
     int windowId;
     QSystemDeviceInfo systemInfo;
     QString currentFile;
+
+    typedef enum {
+        MODE_IMAGE,
+        MODE_VIDEO
+    } videoMode;
+    int currentMode;
+
 };
 #endif

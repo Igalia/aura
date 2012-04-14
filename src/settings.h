@@ -31,7 +31,8 @@
 
 #define INTERNAL_EMMC_PATH        "/home/user/MyDocs"
 #define APP_FOLDER                INTERNAL_EMMC_PATH"/aura"
-#define FILE_SUFFIX               "mp4"
+#define VIDEO_FILE_SUFFIX               "mp4"
+#define IMAGE_FILE_SUFFIX               "jpg"
 
 // zoom
 #define ZOOM_MIN                  1.0

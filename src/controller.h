@@ -6,6 +6,7 @@
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Michele Tameni <michele@tameni.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -94,7 +95,9 @@ public slots:
     void pausePipeline();
     void startRecording();
     void stopRecording();
+    void captureImage();
     void shutterClicked();
+    void cameraShutterClicked();
     void setRecording(bool recording);
     void setVideoEffect(const QString &value);
     void setColorFilter(const ControllerSettings::ColorFilter value);

@@ -6,6 +6,7 @@
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Michele Tameni <michele@tameni.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -224,12 +225,42 @@ PageStackWindow {
                     }
                 }
 
+                Button {
+                    id: cameraShutter
+                    platformStyle: ButtonStyle {
+                        background: "qrc:/resources/shutter-bg.png"
+                        disabledBackground: "qrc:/resources/shutter-bg.png"
+                        pressedBackground: "qrc:/resources/shutter-bg-pressed.png"
+                        textColor: "white"
+                        fontPixelSize: UIConstants.FONT_DEFAULT
+                        fontFamily: UIConstants.FONT_FAMILY
+                    }
+                    anchors {
+                        top:  postCapture.bottom
+                        topMargin: 5
+                        right: shutter.left
+                        rightMargin: 10
+                    }
+                    height: 90
+                    width: 100
+                    iconSource: "qrc:/resources/camera-icon.png"
+                    visible:  controller.recording ? false: !page.__dialogsVisible
+                    enabled: controller.pipelineReady
+                    opacity: enabled ? 1 : page.__dimmedOpacity
+                    Behavior on opacity { NumberAnimation { duration: page.__animationDuration } }
+
+                    onClicked: {
+                        controller.cameraShutterClicked()
+                    }
+                }
+
                 Image {
                     id: timer
                     anchors {
-                        top: postCapture.bottom
+                        top: shutter.bottom
                         topMargin: 5
-                        left: postCapture.left
+                        left: shutter.left
+                        leftMargin: 10
                     }
                     source: "qrc:/resources/timer-bg.png"
                     Text {
@@ -243,20 +274,7 @@ PageStackWindow {
                         color: "white"
                         text: controller.recordedTime
                     }
-                    visible: !page.__dialogsVisible
-                }
-
-                Text {
-                    id: deviceText
-                    anchors {
-                        left: deviceConf.left
-                        bottom: deviceConf.top
-                    }
-                    visible: !controller.recording && !page.__dialogsVisible
-                    font.pixelSize: UIConstants.FONT_DEFAULT
-                    font.family: UIConstants.FONT_FAMILY
-                    color: "white"
-                    text: "Camera"
+                    visible: controller.recording ? !page.__dialogsVisible : false
                 }
 
                 Rectangle {
