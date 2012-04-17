@@ -145,7 +145,7 @@ PageStackWindow {
                     appString: "Aura"
                     iconSource: "file:///opt/aura/share/icons/hicolor/" +
                         "64x64/apps/aura.png"
-                    email: "info@igalia.com"
+                    email: "ovi-store@igalia.com"
                     twitterUrl: "https://twitter.com/#!/Igalia"
                     copyright: "Copyright © 2012 Igalia"
                     storeUrl: "http://store.ovi.com/content/266783"
