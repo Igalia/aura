@@ -99,7 +99,7 @@ PageStackWindow {
                         horizontalCenterOffset: -114
                         verticalCenter: parent.verticalCenter
                     }
-                    visible: controller.pipelineStarting
+                    visible: platformWindow.active && controller.pipelineStarting
                     font.pixelSize: UIConstants.FONT_XLARGE
                     font.family: UIConstants.FONT_FAMILY
                     color: "white"
