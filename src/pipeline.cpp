@@ -352,9 +352,12 @@ void Pipeline::handleBusMessage(GstMessage *message)
     switch (GST_MESSAGE_TYPE(message)) {
     case GST_MESSAGE_ELEMENT:
         {
-            // The only message we are handling here is the prepare-xwindow-id one
-            if (gst_structure_has_name (message->structure, "prepare-xwindow-id")) {
-                gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(viewfinder), windowId);
+            // The only message we are handling here is the
+            // prepare-xwindow-id one
+            if (gst_structure_has_name (message->structure,
+                                        "prepare-xwindow-id")) {
+                gst_x_overlay_set_window_handle(GST_X_OVERLAY(viewfinder),
+                                                windowId);
             }
             break;
         }
