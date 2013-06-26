@@ -1,11 +1,12 @@
 /*
  * This file is part of aura
  *
- * Copyright (C) 2012 Igalia S.L.
+ * Copyright (C) 2012, 2013 Igalia S.L.
  *
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Andrés Gómez <agomez@igalia.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -86,6 +87,7 @@ Pipeline::Pipeline(QObject *parent)
       camerabin(0),
       videoSrc(0),
       viewfinder(0),
+      viewfinderFlip(0),
       effectBin(0),
       effectValve(0),
       effect(0),
@@ -138,6 +140,9 @@ Pipeline::Pipeline(QObject *parent)
     g_object_set(camerabin, "audio-encoder", audioEncBin, NULL);
 
     // viewfinder
+    viewfinderFlip = gst_element_factory_make("videoflip", NULL);
+    g_object_set (G_OBJECT (camerabin), "viewfinder-filter", viewfinderFlip, NULL);
+
     viewfinder = gst_element_factory_make("omapxvsink", NULL);
     g_object_set(viewfinder, "autopaint-colorkey", FALSE, NULL);
     g_object_set (G_OBJECT (camerabin), "viewfinder-sink", viewfinder, NULL);
@@ -338,7 +343,23 @@ void Pipeline::setVideoEffect(const QString &value)
 void Pipeline::setDevice(ControllerSettings::Device value)
 {
     stop();
-    g_object_set(videoSrc, "camera-device", value, NULL);
+    switch (value) {
+    case ControllerSettings::Primary:
+        g_object_set(videoSrc, "camera-device", 0, NULL);
+        // GST_VIDEO_FLIP_METHOD_IDENTITY
+        g_object_set(viewfinderFlip, "method", 0, NULL);
+        break;
+    case ControllerSettings::Secondary:
+        // When we use the secondary (front) camera, we expect to work
+        // as a mirror by default *only* in the viewfinder. The
+        // recording would be normal.
+        g_object_set(videoSrc, "camera-device", 1, NULL);
+        // GST_VIDEO_FLIP_METHOD_HORIZ
+        g_object_set(viewfinderFlip, "method", 4, NULL);
+        break;
+    default:
+        Q_ASSERT(0 != instancePointer);
+    }
     start();
 }
 

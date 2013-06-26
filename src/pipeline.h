@@ -1,11 +1,12 @@
 /*
  * This file is part of aura
  *
- * Copyright (C) 2012 Igalia S.L.
+ * Copyright (C) 2012, 2013 Igalia S.L.
  *
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Andrés Gómez <agomez@igalia.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -88,6 +89,7 @@ class Pipeline : public QObject
     GstElement *camerabin;
     GstElement *videoSrc;
     GstElement *viewfinder;
+    GstElement *viewfinderFlip;
 
     GstElement *effectBin;
     GstElement *effectValve;
