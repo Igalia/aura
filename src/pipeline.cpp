@@ -6,6 +6,7 @@
  * Contact: Miguel Gómez <magomez@igalia.com>
  *          Xabier Rodriguez Calvar <xrcalvar@igalia.com>
  *          Víctor Jáquez <vjaquez@igalia.com>
+ *          Michele Tameni <michele@tameni.it>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -166,9 +167,25 @@ Pipeline::~Pipeline()
     gst_object_unref(GST_OBJECT(camerabin));
 }
 
+void Pipeline::setCameraMode()
+{
+    currentMode = MODE_IMAGE;
+    g_object_set(camerabin, "mode", 0, NULL);
+
+    // set auto scene mode
+    gst_photography_set_scene_mode(GST_PHOTOGRAPHY(videoSrc),
+                                   GST_PHOTOGRAPHY_SCENE_MODE_AUTO);
+    // disable autofocus
+    gst_photography_set_autofocus (GST_PHOTOGRAPHY(videoSrc), FALSE);
+    // disable flash
+    g_object_set(videoSrc, "video-torch", FALSE, NULL);
+
+}
+
 void Pipeline::setVideoMode()
 {
-    g_object_set(camerabin, "mode", 1, NULL);
+    currentMode = MODE_VIDEO;
+    g_object_set(camerabin, "mode", MODE_VIDEO, NULL);
 
     // set auto scene mode
     gst_photography_set_scene_mode(GST_PHOTOGRAPHY(videoSrc),
@@ -209,6 +226,9 @@ void Pipeline::prepare()
 
 void Pipeline::startRecording()
 {
+    if(currentMode == MODE_IMAGE)
+        setVideoMode();
+
     currentFile = nextFileName();
     emit savedFileNameChanged(currentFile);
 
@@ -228,6 +248,27 @@ void Pipeline::stopRecording()
 {
     g_signal_emit_by_name(camerabin, "capture-stop", 0);
 }
+
+void Pipeline::captureImage()
+{
+    if(currentMode == MODE_VIDEO)
+        setCameraMode();
+
+    currentFile = nextFileName();
+    emit savedFileNameChanged(currentFile);
+
+    // set next file name
+    g_object_set(camerabin,
+                 "filename",
+                 currentFile.toUtf8().constData(),
+                 NULL);
+
+    // write image metadata
+    writeMetadata();
+
+    g_signal_emit_by_name(camerabin, "capture-start", 0);
+}
+
 
 void Pipeline::setResolution(Resolution value)
 {
@@ -439,7 +480,7 @@ QString Pipeline::nextFileName()
     int index = dir.count() + 1;
 
     QString filename(APP_FOLDER);
-    filename += QDir::separator() + QString("%1_%2.%3").arg(date).arg(index).arg(FILE_SUFFIX);
+        filename += QDir::separator() + QString("%1_%2.%3").arg(date).arg(index).arg((currentMode==MODE_VIDEO) ? VIDEO_FILE_SUFFIX : IMAGE_FILE_SUFFIX);
     return filename;
 }
 

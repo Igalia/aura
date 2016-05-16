@@ -17,5 +17,6 @@
         <file>resources/switch-bg.png</file>
         <file>resources/switch-handle.png</file>
         <file>resources/switch-handle-pressed.png</file>
+        <file>resources/camera-icon.png</file>
     </qresource>
 </RCC>
